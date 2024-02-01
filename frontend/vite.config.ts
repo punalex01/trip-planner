@@ -8,6 +8,7 @@ export default defineConfig({
     alias: {
       shadcn: path.resolve(__dirname, './src/components/shadcn'),
       src: path.resolve(__dirname, './src'),
+      public: path.resolve(__dirname, './public'),
     },
   },
 });

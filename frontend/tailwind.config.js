@@ -13,8 +13,8 @@ module.exports = {
     },
     extend: {
       colors: {
-        wheat: '#eadbae',
-        jade: '#A3B9B3',
+        wheat: 'hsl(var(--wheat) / <alpha-value>)',
+        jade: 'rgb(var(--jade) / <alpha-value>)',
         jade2: '#85a29b',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

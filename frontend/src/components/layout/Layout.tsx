@@ -1,9 +1,12 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'shadcn/components/ui/resizable';
 import { PageHeader } from './PageHeader';
 import { Sidebar } from './Sidebar';
+import { cn } from 'shadcn/lib/utils';
 
 export const Layout: FC = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
     <>
       <div className='h-full w-full flex flex-col px-12 py-6 bg-jade'>
@@ -11,13 +14,20 @@ export const Layout: FC = () => {
         <div className='grow bg-wheat border rounded-lg border-gray-600'>
           {/* Content header Component */}
           <ResizablePanelGroup direction='horizontal' className='h-full'>
-            <ResizablePanel defaultSize={25} minSize={10} className='border-r-2 border-gray-600'>
-              {/* Sidebar Component */}
-              <Sidebar />
-              <div className='p-6 h-full text-white'>One</div>
+            <ResizablePanel
+              defaultSize={15}
+              minSize={10}
+              maxSize={20}
+              collapsible={true}
+              collapsedSize={5}
+              onCollapse={() => setIsCollapsed(true)}
+              onExpand={() => setIsCollapsed(false)}
+              className={cn(isCollapsed && 'min-w-10 transition-all duration-300 ease-in-out')}
+            >
+              <Sidebar isCollapsed={isCollapsed} />
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel defaultSize={75}>Two</ResizablePanel>
+            <ResizablePanel defaultSize={80}>Two</ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>

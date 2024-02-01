@@ -37,6 +37,9 @@ html, body, body>div {
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+
+    --wheat: 45 58.8% 80%;
+    --jade: 163 185 179;
   }
  
   .dark {
