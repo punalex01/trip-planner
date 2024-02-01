@@ -114,10 +114,15 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className='flex h-full w-full'>
-        <ScrollArea className='grow w-full p-3'>
+      <div className='flex grow flex-col w-full'>
+        <ScrollArea className='w-full p-3'>
           <div className='h-full w-full flex flex-col space-y-2'>{displayModules}</div>
         </ScrollArea>
+        <div className='w-full h-16 mt-auto border-t-2 border-gray-600 p-3'>
+          <div className='flex h-10 bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'>
+            <div className='text-white'>+ New Module</div>
+          </div>
+        </div>
       </div>
     </>
   );

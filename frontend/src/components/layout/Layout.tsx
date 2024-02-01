@@ -22,7 +22,7 @@ export const Layout: FC = () => {
               collapsedSize={5}
               onCollapse={() => setIsCollapsed(true)}
               onExpand={() => setIsCollapsed(false)}
-              className={cn(isCollapsed && 'min-w-10 transition-all duration-300 ease-in-out')}
+              className={cn('h-full flex flex-col', isCollapsed && 'min-w-10 transition-all duration-300 ease-in-out')}
             >
               <Sidebar isCollapsed={isCollapsed} />
             </ResizablePanel>
