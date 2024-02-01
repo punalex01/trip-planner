@@ -60,7 +60,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
           onClick={() => setModule(module.name)}
           className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer ' + bg}
         >
-          <h2 className='font-bold'>$</h2>
+          {moduleIcon}
         </div>
       );
     }
@@ -70,7 +70,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         key={index}
         onClick={() => setModule(module.name)}
         className={
-          'flex grow max-h-10 h-10 w-full px-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
+          'flex grow h-10 w-full px-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
           bg
         }
       >
