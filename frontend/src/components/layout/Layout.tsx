@@ -9,9 +9,9 @@ export const Layout: FC = () => {
 
   return (
     <>
-      <div className='h-full w-full flex flex-col px-12 py-6 bg-jade'>
+      <div className='h-full w-full flex flex-col'>
         <PageHeader />
-        <div className='grow bg-wheat border rounded-lg border-gray-600'>
+        <div className='grow bg-apricot border border-gray-600'>
           {/* Content header Component */}
           <ResizablePanelGroup direction='horizontal' className='h-full'>
             <ResizablePanel

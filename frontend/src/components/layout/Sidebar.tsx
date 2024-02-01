@@ -39,7 +39,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   };
 
   const displayModules = mockJapanModules.map((module, index) => {
-    const bg = currModule === module.name ? ' bg-jade/30' : ' hover:bg-jade/30';
+    const bg = currModule === module.name ? ' bg-eggplant/20' : ' hover:bg-eggplant/20';
 
     let moduleIcon;
     switch (module.pageType) {
@@ -58,7 +58,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         <div
           key={index}
           onClick={() => setModule(module.name)}
-          className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer ' + bg}
+          className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' + bg}
         >
           {moduleIcon}
         </div>
