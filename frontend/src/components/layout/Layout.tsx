@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'shadcn/components/ui/resizable';
 import { PageHeader } from './PageHeader';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from './sidebar/Sidebar';
 import { cn } from 'shadcn/lib/utils';
 
 export const Layout: FC = () => {
@@ -12,12 +12,11 @@ export const Layout: FC = () => {
       <div className='h-full w-full flex flex-col'>
         <PageHeader />
         <div className='grow bg-apricot border border-gray-600'>
-          {/* Content header Component */}
           <ResizablePanelGroup direction='horizontal' className='h-full'>
             <ResizablePanel
               defaultSize={15}
               minSize={10}
-              maxSize={20}
+              maxSize={15}
               collapsible={true}
               collapsedSize={5}
               onCollapse={() => setIsCollapsed(true)}

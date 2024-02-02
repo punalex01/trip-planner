@@ -9,6 +9,7 @@ import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 import { mockTrips } from 'src/mocks/trips';
 import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
+import { AddTripModal } from '../../home/AddTripModal';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,6 +19,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   const [open, setOpen] = useState(false);
   const [currTrip, setTrip] = useState('');
   const [currModule, setModule] = useState('Group Packing List');
+  const [isModuleModalOpen, setModuleModalOpen] = useState(false);
 
   const displaySearchBar = () => {
     if (!isCollapsed) {
@@ -118,11 +120,14 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         <ScrollArea className='w-full p-3'>
           <div className='h-full w-full flex flex-col space-y-2'>{displayModules}</div>
         </ScrollArea>
-        <div className='w-full h-16 mt-auto border-t-2 border-gray-600 p-3'>
+        <div className='w-full h-16 mt-auto p-3'>
           <div className='flex h-10 bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'>
-            <div className='text-white'>+ New Module</div>
+            <button onClick={() => setModuleModalOpen(true)} className='text-white'>
+              {isCollapsed ? '+' : '+ New Module'}
+            </button>
           </div>
         </div>
+        <AddTripModal isTripModalOpen={isModuleModalOpen} setTripModalOpen={setModuleModalOpen} />
       </div>
     </>
   );
