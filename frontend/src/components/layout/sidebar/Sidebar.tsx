@@ -9,7 +9,7 @@ import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 import { mockTrips } from 'src/mocks/trips';
 import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
-import { AddTripModal } from '../../home/AddTripModal';
+import { AddModuleModal } from './modal/AddModuleModal';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -127,7 +127,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
             </button>
           </div>
         </div>
-        <AddTripModal isTripModalOpen={isModuleModalOpen} setTripModalOpen={setModuleModalOpen} />
+        <AddModuleModal isModuleModalOpen={isModuleModalOpen} setModuleModalOpen={setModuleModalOpen} />
       </div>
     </>
   );

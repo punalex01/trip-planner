@@ -12,7 +12,7 @@ import { cn } from 'shadcn/lib/utils';
 import { Calendar } from 'shadcn/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/components/ui/popoverDialog';
 import { Form, FormField, FormItem, FormLabel } from 'shadcn/components/ui/form';
-import { AddTripForm } from './forms/AddTripForm';
+import { AddTripForm } from '../forms/AddTripForm';
 
 interface AddTripModalProps {
   isTripModalOpen: boolean;
