@@ -3,13 +3,14 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from 'shadcn/com
 import { PageHeader } from './PageHeader';
 import { Sidebar } from './sidebar/Sidebar';
 import { cn } from 'shadcn/lib/utils';
+import { Outlet } from 'react-router-dom';
 
 export const Layout: FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <>
-      <div className='h-full w-full flex flex-col'>
+      <div className='h-full w-full flex flex-col overflow-hidden'>
         <PageHeader />
         <div className='grow bg-apricot border border-gray-600'>
           <ResizablePanelGroup direction='horizontal' className='h-full'>
@@ -26,7 +27,9 @@ export const Layout: FC = () => {
               <Sidebar isCollapsed={isCollapsed} />
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel defaultSize={80}>Two</ResizablePanel>
+            <ResizablePanel defaultSize={80} className='h-full'>
+              <Outlet />
+            </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>

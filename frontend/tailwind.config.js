@@ -18,6 +18,7 @@ module.exports = {
         jade2: '#85a29b',
         eggplant: 'hsl(var(--eggplant) / <alpha-value>)',
         apricot: 'hsl(var(--apricot) / <alpha-value>)',
+        violet: 'hsl(var(--violet) / <alpha-value>)',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
