@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { TripButton } from './TripButton';
 import { AddTripModal } from './modal/AddTripModal';
-import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 
 export const Home: FC = () => {
   const [isTripModalOpen, setTripModalOpen] = useState(false);

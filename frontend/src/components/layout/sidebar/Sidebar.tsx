@@ -121,10 +121,11 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
           <div className='h-full w-full flex flex-col space-y-2'>{displayModules}</div>
         </ScrollArea>
         <div className='w-full h-16 mt-auto p-3'>
-          <div className='flex h-10 bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'>
-            <button onClick={() => setModuleModalOpen(true)} className='text-white'>
-              {isCollapsed ? '+' : '+ New Module'}
-            </button>
+          <div
+            onClick={() => setModuleModalOpen(true)}
+            className='flex h-10 bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'
+          >
+            <button className='text-white'>{isCollapsed ? '+' : '+ New Module'}</button>
           </div>
         </div>
         <AddModuleModal isModuleModalOpen={isModuleModalOpen} setModuleModalOpen={setModuleModalOpen} />
