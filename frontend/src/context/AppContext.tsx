@@ -1,26 +1,31 @@
-import { createContext, useReducer, ReactNode } from 'react';
-import appStateReducer from './AppContextReducer';
-import { IAppAction, IAppState } from './types';
+import { createContext, useReducer, ReactNode, useContext } from 'react';
+import { appStateReducer, getAppStateDispatch } from './AppContextReducer';
+import { AppStateReducers, IAppState } from './types';
 
-export type IAppContext = [IAppState, React.Dispatch<IAppAction>];
+export type IAppContext = [IAppState, AppStateReducers];
 
 interface ProviderProps {
   children: ReactNode;
 }
 
-const AppContext = createContext<IAppContext>([
-  {
-    currTripModule: { trip: null, module: null },
-  },
-  () => null,
-]);
+const AppContext = createContext<IAppContext | undefined>(undefined);
 
 const AppStateProvider = ({ children }: ProviderProps) => {
   const [appState, setAppState] = useReducer(appStateReducer, {
-    currTripModule: { trip: null, module: null },
+    currentTripModule: { trip: null, module: null },
   });
 
-  return <AppContext.Provider value={[appState, setAppState]}>{children}</AppContext.Provider>;
+  const reducers = getAppStateDispatch(setAppState);
+
+  return <AppContext.Provider value={[appState, reducers]}>{children}</AppContext.Provider>;
 };
 
-export { AppContext, AppStateProvider };
+const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error('useAppContext must be used within a AppStateProvider');
+  }
+  return context;
+};
+
+export { AppContext, AppStateProvider, useAppContext };

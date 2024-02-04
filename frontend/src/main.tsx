@@ -4,7 +4,7 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Test } from './routes/test.tsx';
 import { Layout } from './components/layout/Layout.tsx';
-import { Home } from './components/home/home.tsx';
+import { Home } from './components/home/Home.tsx';
 import { Root } from './routes/root.tsx';
 import { App } from './routes/app.tsx';
 

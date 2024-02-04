@@ -1,4 +1,4 @@
-import { useState, FC, useContext } from 'react';
+import { useState, FC } from 'react';
 import { Button } from 'shadcn/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'shadcn/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/components/ui/popover';
@@ -10,7 +10,7 @@ import { mockTrips } from 'src/mocks/trips';
 import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
 import { AddModuleModal } from './modal/AddModuleModal';
-import { AppContext } from 'src/context/AppContext';
+import { useAppContext } from 'src/context/AppContext';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,19 +18,18 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   const [open, setOpen] = useState(false);
-  const [currTrip, setTrip] = useState('');
-  const [currModule, setModule] = useState('Group Packing List');
+  // const [currModule, setModule] = useState('Group Packing List');
   const [isModuleModalOpen, setModuleModalOpen] = useState(false);
-
-  const [state] = useContext(AppContext);
-  console.log(state);
+  const [{ currentTripModule }, { setCurrentTrip, setCurrentModule }] = useAppContext();
+  const currTrip = currentTripModule.trip;
+  const currModule = currentTripModule.module;
 
   const displaySearchBar = () => {
     if (!isCollapsed) {
       return (
         <div className='w-full flex justify-end'>
           <div className='w-full grow flex justify-start line-clamp-1'>
-            {currTrip ? mockTrips.find((trip) => trip.name.toLowerCase() === currTrip)?.name : 'Select trip...'}
+            {currentTripModule.trip ? currentTripModule.trip.name : 'Select trip...'}
           </div>
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </div>
@@ -41,11 +40,11 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
       return <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />;
     }
 
-    return <div className='font-bold'>{currTrip[0].toUpperCase()}</div>;
+    return <div className='font-bold'>{currTrip.name[0].toUpperCase()}</div>;
   };
 
   const displayModules = mockJapanModules.map((module, index) => {
-    const bg = currModule === module.name ? ' bg-eggplant/20' : ' hover:bg-eggplant/20';
+    const bg = currModule && currModule.id === module.id ? ' bg-eggplant/20' : ' hover:bg-eggplant/20';
 
     let moduleIcon;
     switch (module.pageType) {
@@ -63,7 +62,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
       return (
         <div
           key={index}
-          onClick={() => setModule(module.name)}
+          onClick={() => setCurrentModule(module)}
           className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' + bg}
         >
           {moduleIcon}
@@ -74,7 +73,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
     return (
       <div
         key={index}
-        onClick={() => setModule(module.name)}
+        onClick={() => setCurrentModule(module)}
         className={
           'flex grow h-10 w-full px-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
           bg
@@ -104,13 +103,18 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
                   <CommandItem
                     key={trip.id}
                     value={trip.name}
-                    onSelect={(currentValue) => {
-                      setTrip(currentValue === currTrip ? '' : currentValue);
+                    onSelect={() => {
+                      // TODO: GET Request to retrieve selected trip
+                      const currTrip = mockTrips.find((mockTrip) => mockTrip.id === trip.id);
+                      if (currTrip !== undefined) setCurrentTrip(currTrip);
                       setOpen(false);
                     }}
                   >
                     <Check
-                      className={cn('mr-2 h-4 w-4', currTrip === trip.name.toLowerCase() ? 'opacity-100' : 'opacity-0')}
+                      className={cn(
+                        'mr-2 h-4 w-4',
+                        currTrip && currTrip.name === trip.name.toLowerCase() ? 'opacity-100' : 'opacity-0'
+                      )}
                     />
                     {trip.name}
                   </CommandItem>
@@ -125,12 +129,12 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
           <div className='h-full w-full flex flex-col space-y-2'>{displayModules}</div>
         </ScrollArea>
         <div className='w-full h-16 mt-auto p-3'>
-          <div
+          <button
             onClick={() => setModuleModalOpen(true)}
-            className='flex h-10 bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'
+            className='flex h-10 w-full bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'
           >
-            <button className='text-white'>{isCollapsed ? '+' : '+ New Module'}</button>
-          </div>
+            <div className='text-white'>{isCollapsed ? '+' : '+ New Module'}</div>
+          </button>
         </div>
         <AddModuleModal isModuleModalOpen={isModuleModalOpen} setModuleModalOpen={setModuleModalOpen} />
       </div>

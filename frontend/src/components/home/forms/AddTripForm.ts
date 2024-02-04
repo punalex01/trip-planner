@@ -33,9 +33,7 @@ export const AddTripForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {}
 
-  function onError() {
-    console.log();
-  }
+  function onError() {}
 
   return { modalForm, setDate, onSubmit, onError };
 };
