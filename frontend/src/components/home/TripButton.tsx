@@ -14,7 +14,6 @@ export const TripButton: FC<TripButtonProps> = ({ name, startDate, color, hoverC
   const displayDate = startDate ? (
     <div className='text-sm text-white mt-2'>{`${format(startDate, "MMM ''yy")}`}</div>
   ) : null;
-  console.log(hoverColor);
   return (
     <>
       <button

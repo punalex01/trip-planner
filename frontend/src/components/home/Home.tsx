@@ -4,7 +4,7 @@ import { AddTripModal } from './modal/AddTripModal';
 
 export const Home: FC = () => {
   const [isTripModalOpen, setTripModalOpen] = useState(false);
-  const test = Array.from('WOWWWWWWWWWWWWWWWW');
+  const test = Array.from('W');
   return (
     <>
       <div className='flex flex-col h-full w-full'>

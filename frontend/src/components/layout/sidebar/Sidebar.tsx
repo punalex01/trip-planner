@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { useState, FC, useContext } from 'react';
 import { Button } from 'shadcn/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'shadcn/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/components/ui/popover';
@@ -10,6 +10,7 @@ import { mockTrips } from 'src/mocks/trips';
 import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
 import { AddModuleModal } from './modal/AddModuleModal';
+import { AppContext } from 'src/context/AppContext';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -20,6 +21,9 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   const [currTrip, setTrip] = useState('');
   const [currModule, setModule] = useState('Group Packing List');
   const [isModuleModalOpen, setModuleModalOpen] = useState(false);
+
+  const [state] = useContext(AppContext);
+  console.log(state);
 
   const displaySearchBar = () => {
     if (!isCollapsed) {
