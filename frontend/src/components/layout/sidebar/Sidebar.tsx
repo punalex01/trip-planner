@@ -11,6 +11,7 @@ import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
 import { AddModuleModal } from './modal/AddModuleModal';
 import { useAppContext } from 'src/context/AppContext';
+import { FinancialsButtons } from './FinancialsButtons';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,7 +19,6 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   const [open, setOpen] = useState(false);
-  // const [currModule, setModule] = useState('Group Packing List');
   const [isModuleModalOpen, setModuleModalOpen] = useState(false);
   const [{ currentTripModule }, { setCurrentTrip, setCurrentModule }] = useAppContext();
   const currTrip = currentTripModule.trip;
@@ -49,8 +49,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
     let moduleIcon;
     switch (module.pageType) {
       case FINANCIAL_MODULE:
-        moduleIcon = <CircleDollarSign />;
-        break;
+        return <FinancialsButtons isSidebarCollapsed={isCollapsed} module={module} />;
       case CHECKLIST_MODULE:
         moduleIcon = <ListTodo />;
         break;
