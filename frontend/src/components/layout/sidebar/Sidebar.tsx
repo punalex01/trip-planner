@@ -2,7 +2,7 @@ import { useState, FC } from 'react';
 import { Button } from 'shadcn/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'shadcn/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/components/ui/popover';
-import { Check, ChevronsUpDown, CircleDollarSign, ListTodo } from 'lucide-react';
+import { Check, ChevronsUpDown, ListTodo } from 'lucide-react';
 import { cn } from 'shadcn/lib/utils';
 import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 
@@ -51,7 +51,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
       case FINANCIAL_MODULE:
         return <FinancialsButtons isSidebarCollapsed={isCollapsed} module={module} />;
       case CHECKLIST_MODULE:
-        moduleIcon = <ListTodo />;
+        moduleIcon = <ListTodo className='shrink-0' />;
         break;
       default:
         break;
@@ -59,12 +59,13 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
 
     if (isCollapsed) {
       return (
-        <div
-          key={index}
-          onClick={() => setCurrentModule(module)}
-          className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' + bg}
-        >
-          {moduleIcon}
+        <div key={index} className='border border-eggplant/20 rounded-xl'>
+          <div
+            onClick={() => setCurrentModule(module)}
+            className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' + bg}
+          >
+            {moduleIcon}
+          </div>
         </div>
       );
     }
