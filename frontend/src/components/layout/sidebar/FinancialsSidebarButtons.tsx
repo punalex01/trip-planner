@@ -9,7 +9,7 @@ interface FinancialsButtonsProps {
   module: Module;
 }
 
-export const FinancialsButtons: FC<FinancialsButtonsProps> = ({ isSidebarCollapsed, module }) => {
+export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebarCollapsed, module }) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const [{ currentTripModule }, { setCurrentModule, setGroupViewType }] = useAppContext();
   const currSelectedModule = currentTripModule.module;
@@ -29,7 +29,7 @@ export const FinancialsButtons: FC<FinancialsButtonsProps> = ({ isSidebarCollaps
   // Edit border styling to make corners line up
   const buttonRoundedStyling = (isMainModuleButton: boolean) => {
     if (isMainModuleButton) {
-      return groupView === GroupViewType.INDIVIDUAL_VIEW ? ' rounded-t-lg' : ' rounded-lg';
+      return !isCollapsed && groupView === GroupViewType.INDIVIDUAL_VIEW ? ' rounded-t-lg' : ' rounded-lg';
     } else {
       return groupView === GroupViewType.INDIVIDUAL_VIEW ? ' rounded-b-lg' : ' rounded-lg';
     }

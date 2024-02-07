@@ -7,6 +7,7 @@ import { Layout } from './components/layout/Layout.tsx';
 import { Home } from './components/home/Home.tsx';
 import { Root } from './routes/root.tsx';
 import { App } from './routes/app.tsx';
+import { GroupFinancials } from './components/financials/group/GroupFinancials.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
           {
             path: 'root',
             element: <Root />,
+          },
+          {
+            path: 'financials',
+            element: <GroupFinancials />,
           },
         ],
       },

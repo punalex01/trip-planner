@@ -11,7 +11,7 @@ import { mockJapanModules } from 'src/mocks/pages';
 import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
 import { AddModuleModal } from './modal/AddModuleModal';
 import { useAppContext } from 'src/context/AppContext';
-import { FinancialsButtons } from './FinancialsButtons';
+import { FinancialsSidebarButtons } from './FinancialsSidebarButtons';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -49,7 +49,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
     let moduleIcon;
     switch (module.pageType) {
       case FINANCIAL_MODULE:
-        return <FinancialsButtons isSidebarCollapsed={isCollapsed} module={module} />;
+        return <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} module={module} />;
       case CHECKLIST_MODULE:
         moduleIcon = <ListTodo className='shrink-0' />;
         break;
@@ -75,7 +75,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         key={index}
         onClick={() => setCurrentModule(module)}
         className={
-          'flex grow h-10 w-full px-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
+          'flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1' +
           bg
         }
       >
