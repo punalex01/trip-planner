@@ -1,16 +1,17 @@
-import { User } from './User';
+import { IUser } from './User';
 
-export interface Payment {
+export interface IPayment {
   name: string;
   date: Date;
-  lendee: User; // User
+  lendee: IUser; // User
   isReturned: boolean;
   total: number;
   lenderAmounts: LenderAmount[];
+  uuid: string;
 }
 
 export interface LenderAmount {
-  user: User; // User
+  user: IUser; // User
   amount: number;
   isReturned: boolean;
 }

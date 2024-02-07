@@ -1,4 +1,6 @@
-export const mockUsers = [
+import { IUser } from 'src/interfaces/User';
+
+export const mockUsers: IUser[] = [
   {
     name: 'Alex',
     email: 'a@gmail.com',

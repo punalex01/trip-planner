@@ -1,6 +1,7 @@
+import { IPayment } from 'src/interfaces/Payment';
 import { mockUsers } from './users';
 
-export const mockPayments = {
+export const mockPayments: IPayment = {
   name: 'Ramen Nagi',
   date: new Date(2024, 6, 2),
   lendee: mockUsers[0],
@@ -23,4 +24,5 @@ export const mockPayments = {
       isReturned: true,
     },
   ],
+  uuid: 'Placeholder UUID',
 };
