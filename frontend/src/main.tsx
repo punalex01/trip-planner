@@ -7,7 +7,7 @@ import { Layout } from './components/layout/Layout.tsx';
 import { Home } from './components/home/Home.tsx';
 import { Root } from './routes/root.tsx';
 import { App } from './routes/app.tsx';
-import { GroupFinancials } from './components/financials/group/GroupFinancials.tsx';
+import { GroupFinancials } from './components/financials/groupPayments/GroupFinancials.tsx';
 
 const router = createBrowserRouter([
   {
