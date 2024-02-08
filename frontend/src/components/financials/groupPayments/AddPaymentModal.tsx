@@ -97,10 +97,11 @@ export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpe
                         name='lender'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Lendee</FormLabel>
+                            <FormLabel>Lender</FormLabel>
                             <Select
                               onValueChange={(value) => field.onChange(mockUsers.find((user) => user.uuid === value))}
-                              defaultValue={field.value.name}
+                              // Default value should be user submitting form
+                              // defaultValue={modalForm.watch('lender.name')}
                             >
                               <FormControl>
                                 <SelectTrigger>

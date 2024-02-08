@@ -30,6 +30,8 @@ export default function MoneyInput(props: TextInputProps) {
     realChangeFn(realValue);
   }
 
+  const formValue = props.form.watch(props.name);
+
   return (
     <FormField
       control={props.form.control}
@@ -52,7 +54,7 @@ export default function MoneyInput(props: TextInputProps) {
                     setValue(ev.target.value);
                     handleChange(_change, ev.target.value);
                   }}
-                  value={props.disabled ? '$0.00' : props.form.watch(props.name)}
+                  value={props.disabled ? '$0.00' : currencyFormatter.format(formValue)}
                   className={props.className}
                 />
               </FormControl>
