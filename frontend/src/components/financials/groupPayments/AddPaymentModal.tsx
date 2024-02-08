@@ -22,7 +22,7 @@ interface AddPaymentModalProps {
 }
 
 export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpen, setAddPaymentModalOpen }) => {
-  const { modalForm, onSubmit, onError } = AddPaymentForm();
+  const { modalForm, onSubmit, onError, splitEvenly } = AddPaymentForm();
 
   return (
     <Dialog.Root open={isAddPaymentModalOpen} onOpenChange={setAddPaymentModalOpen}>
@@ -128,7 +128,7 @@ export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpe
                         render={() => (
                           <FormItem>
                             <div className='mb-2 px-3'>
-                              <FormLabel>Lenders</FormLabel>
+                              <FormLabel>Lendees</FormLabel>
                             </div>
                             <div className='space-y-2'>
                               {mockUsers.map((user, index) => (
@@ -194,7 +194,7 @@ export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpe
                   </div>
 
                   <div className='flex w-1/2 flex-row justify-between'>
-                    <Button variant='outline' onClick={() => setAddPaymentModalOpen(false)}>
+                    <Button variant='outline' onClick={() => splitEvenly()}>
                       Split Evenly
                     </Button>
                     <Button type='submit'>Create</Button>

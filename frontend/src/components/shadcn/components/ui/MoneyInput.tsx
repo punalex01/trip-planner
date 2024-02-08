@@ -1,5 +1,6 @@
-import { useEffect, useReducer } from 'react';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from 'shadcn/components/ui/form'; // Shadcn UI import
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useReducer } from 'react';
+import { FormControl, FormField, FormItem, FormLabel } from 'shadcn/components/ui/form'; // Shadcn UI import
 import { Input } from 'shadcn/components/ui/input'; // Shandcn UI Input
 import { UseFormReturn } from 'react-hook-form';
 import { currencyFormatter } from 'src/global/functions';
@@ -29,8 +30,6 @@ export default function MoneyInput(props: TextInputProps) {
     realChangeFn(realValue);
   }
 
-  useEffect(() => setValue('$0.00'), []);
-
   return (
     <FormField
       control={props.form.control}
@@ -53,7 +52,7 @@ export default function MoneyInput(props: TextInputProps) {
                     setValue(ev.target.value);
                     handleChange(_change, ev.target.value);
                   }}
-                  value={props.disabled ? '$0.00' : value}
+                  value={props.disabled ? '$0.00' : props.form.watch(props.name)}
                   className={props.className}
                 />
               </FormControl>

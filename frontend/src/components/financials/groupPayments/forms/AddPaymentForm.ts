@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 
 export const AddPaymentForm = () => {
   const formSchema = z.object({
@@ -41,6 +40,21 @@ export const AddPaymentForm = () => {
     },
   });
 
+  const formValues = modalForm.watch();
+
+  const splitEvenly = () => {
+    const numLenders = formValues.lendeeAmounts?.length;
+    if (formValues.total && numLenders && numLenders !== 0 && formValues.lendeeAmounts) {
+      const split = formValues.total / numLenders;
+      for (let i = 0; i < numLenders; i++) {
+        modalForm.setValue(`lendeeAmounts.${i}.amount`, split, { shouldValidate: true });
+      }
+    } else {
+      // Can't split evenly
+      return;
+    }
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
@@ -49,8 +63,5 @@ export const AddPaymentForm = () => {
     console.log();
   }
 
-  const lenderAmounts = modalForm.watch('lendeeAmounts');
-  useEffect(() => console.log(lenderAmounts), [lenderAmounts]);
-
-  return { modalForm, onSubmit, onError };
+  return { modalForm, onSubmit, onError, splitEvenly };
 };
