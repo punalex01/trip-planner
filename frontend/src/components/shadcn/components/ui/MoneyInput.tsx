@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from 'shadcn/components/ui/form'; // Shadcn UI import
 import { Input } from 'shadcn/components/ui/input'; // Shandcn UI Input
 import { UseFormReturn } from 'react-hook-form';
@@ -7,9 +7,10 @@ import { currencyFormatter } from 'src/global/functions';
 type TextInputProps = {
   form: UseFormReturn<any>;
   name: string;
-  label: string;
+  label?: string;
   placeholder: string;
   className?: string;
+  disabled?: boolean;
 };
 
 export default function MoneyInput(props: TextInputProps) {
@@ -28,6 +29,8 @@ export default function MoneyInput(props: TextInputProps) {
     realChangeFn(realValue);
   }
 
+  useEffect(() => setValue('$0.00'), []);
+
   return (
     <FormField
       control={props.form.control}
@@ -39,23 +42,24 @@ export default function MoneyInput(props: TextInputProps) {
         return (
           <FormItem>
             <div className='flex flex-col space-y-1.5'>
-              <FormLabel>{props.label}</FormLabel>
+              {props.label ? <FormLabel>{props.label}</FormLabel> : null}
               <FormControl>
                 <Input
                   placeholder={props.placeholder}
                   type='text'
                   {...field}
+                  disabled={props.disabled ? true : false}
                   onChange={(ev) => {
                     setValue(ev.target.value);
                     handleChange(_change, ev.target.value);
                   }}
-                  value={value}
+                  value={props.disabled ? '$0.00' : value}
                   className={props.className}
                 />
               </FormControl>
             </div>
 
-            <FormMessage />
+            {/* <FormMessage /> */}
           </FormItem>
         );
       }}

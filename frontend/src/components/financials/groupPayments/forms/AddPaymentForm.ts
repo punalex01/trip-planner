@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 
 export const AddPaymentForm = () => {
   const formSchema = z.object({
@@ -19,7 +20,7 @@ export const AddPaymentForm = () => {
           email: z.string(),
           uuid: z.string(),
         }),
-        amount: z.number(),
+        amount: z.number().gt(0),
         isReturned: z.boolean(),
       })
     ),
@@ -36,17 +37,7 @@ export const AddPaymentForm = () => {
         uuid: '',
       },
       total: 0,
-      lendeeAmounts: [
-        {
-          user: {
-            name: '',
-            email: '',
-            uuid: '',
-          },
-          amount: 1,
-          isReturned: false,
-        },
-      ],
+      lendeeAmounts: [],
     },
   });
 
@@ -57,6 +48,9 @@ export const AddPaymentForm = () => {
   function onError() {
     console.log();
   }
+
+  const lenderAmounts = modalForm.watch('lendeeAmounts');
+  useEffect(() => console.log(lenderAmounts), [lenderAmounts]);
 
   return { modalForm, onSubmit, onError };
 };

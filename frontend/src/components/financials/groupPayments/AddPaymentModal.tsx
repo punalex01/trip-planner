@@ -127,47 +127,59 @@ export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpe
                         name='lendeeAmounts'
                         render={() => (
                           <FormItem>
-                            <div className='mb-4 px-3'>
+                            <div className='mb-2 px-3'>
                               <FormLabel>Lenders</FormLabel>
                             </div>
-                            {mockUsers.map((user, index) => (
-                              <FormField
-                                key={index}
-                                control={modalForm.control}
-                                name='lendeeAmounts'
-                                render={({ field }) => {
-                                  return (
-                                    <div className='flex flex-col w-full h-8 space-y-3 px-3'>
-                                      <FormItem
-                                        key={user.uuid}
-                                        className='flex flex-row items-start space-x-3 space-y-0'
-                                      >
-                                        <FormControl>
-                                          <Checkbox
-                                            checked={field.value?.some((lendee) => lendee.user.uuid === user.uuid)}
-                                            onCheckedChange={(checked) => {
-                                              return checked
-                                                ? field.onChange([
-                                                    ...field.value,
-                                                    {
-                                                      user: mockUsers.find((e) => e.uuid === user.uuid),
-                                                      amount: 0,
-                                                      isReturned: false,
-                                                    },
-                                                  ])
-                                                : field.onChange(
-                                                    field.value?.filter((value) => value.user.uuid !== user.uuid)
-                                                  );
-                                            }}
+                            <div className='space-y-2'>
+                              {mockUsers.map((user, index) => (
+                                <FormField
+                                  key={index}
+                                  control={modalForm.control}
+                                  name='lendeeAmounts'
+                                  render={({ field }) => {
+                                    return (
+                                      <div className='flex flex-col w-full h-12 px-3'>
+                                        <FormItem
+                                          key={user.uuid}
+                                          className='flex flex-row items-center space-y- justify-between'
+                                        >
+                                          <div className=' space-x-3'>
+                                            <FormControl>
+                                              <Checkbox
+                                                checked={field.value?.some((lendee) => lendee.user.uuid === user.uuid)}
+                                                onCheckedChange={(checked) => {
+                                                  return checked
+                                                    ? field.onChange([
+                                                        ...field.value,
+                                                        {
+                                                          user: mockUsers.find((e) => e.uuid === user.uuid),
+                                                          total: 0,
+                                                          isReturned: false,
+                                                        },
+                                                      ])
+                                                    : field.onChange(
+                                                        field.value?.filter((value) => value.user.uuid !== user.uuid)
+                                                      );
+                                                }}
+                                              />
+                                            </FormControl>
+                                            <FormLabel className='font-normal'>{user.name}</FormLabel>
+                                          </div>
+
+                                          <MoneyInput
+                                            form={modalForm}
+                                            name={`lendeeAmounts.${field.value.findIndex((lendeeAmount) => lendeeAmount.user.uuid === user.uuid)}.amount`}
+                                            placeholder='$0.00'
+                                            disabled={!field.value?.some((lendee) => lendee.user.uuid === user.uuid)}
+                                            className='w-32 justify-self-end'
                                           />
-                                        </FormControl>
-                                        <FormLabel className='font-normal'>{user.name}</FormLabel>
-                                      </FormItem>
-                                    </div>
-                                  );
-                                }}
-                              />
-                            ))}
+                                        </FormItem>
+                                      </div>
+                                    );
+                                  }}
+                                />
+                              ))}
+                            </div>
                           </FormItem>
                         )}
                       />
