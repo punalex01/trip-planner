@@ -105,7 +105,7 @@ export const AddPaymentModal: FC<AddPaymentModalProps> = ({ isAddPaymentModalOpe
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder='Lendee' />
+                                  <SelectValue placeholder='-' />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent avoidCollisions={false}>

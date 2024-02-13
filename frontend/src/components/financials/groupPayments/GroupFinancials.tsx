@@ -1,9 +1,11 @@
 import { FC, useState } from 'react';
 import { PaymentsModule } from '../PaymentsModule';
 import { AddPaymentModal } from './AddPaymentModal';
+import { RepayModal } from './RepayModal';
 
 export const GroupFinancials: FC = () => {
   const [isAddPaymentModalOpen, setAddPaymentModalOpen] = useState(false);
+  const [isRepayModalOpen, setRepayModalOpen] = useState(false);
 
   return (
     <>
@@ -17,10 +19,17 @@ export const GroupFinancials: FC = () => {
             >
               Add Payment
             </button>
+            <button
+              onClick={() => setRepayModalOpen(true)}
+              className='h-10 w-32 border rounded-md border-eggplant/20 bg-eggplant/50 hover:bg-eggplant text-white'
+            >
+              Repay
+            </button>
             <AddPaymentModal
               isAddPaymentModalOpen={isAddPaymentModalOpen}
               setAddPaymentModalOpen={setAddPaymentModalOpen}
             />
+            <RepayModal isRepayModalOpen={isRepayModalOpen} setRepayModalOpen={setRepayModalOpen} />
           </div>
         </div>
         <PaymentsModule />

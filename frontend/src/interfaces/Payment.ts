@@ -15,3 +15,9 @@ export interface LendeeAmount {
   amount: number;
   isReturned: boolean;
 }
+
+export interface IPaymentOwed {
+  name: string;
+  total: number;
+  paymentUUID: string;
+}

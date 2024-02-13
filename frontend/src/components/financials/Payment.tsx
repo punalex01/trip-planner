@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { FC, useState } from 'react';
-import { mockPayments } from '../../mocks/payments';
+import { mockPayment1 } from '../../mocks/payments';
 import { currencyFormatter } from 'src/global/functions';
 import { format } from 'date-fns';
 import { IUser } from 'src/interfaces/User';
@@ -11,21 +11,21 @@ interface PaymentProps {}
 export const Payment: FC<PaymentProps> = () => {
   const [isCollapsed, setCollapsed] = useState(false);
 
-  const [payments, setPayments] = useState(mockPayments);
+  const [payments, setPayments] = useState(mockPayment1);
 
   // TODO - Call update API request instead of just updating in frontend
   const setUserReturnStatus = (lender: IUser, isReturned: boolean) => {
-    const currLenderAmount = payments.lenderAmounts.find((lenderAmount) => lenderAmount.user === lender);
-    if (currLenderAmount) {
-      currLenderAmount.isReturned = isReturned;
+    const currLendeeAmount = payments.lendeeAmounts.find((lendeeAmount) => lendeeAmount.user === lender);
+    if (currLendeeAmount) {
+      currLendeeAmount.isReturned = isReturned;
     }
-    const tempLenderAmounts = payments.lenderAmounts;
-    tempLenderAmounts.map((lenderAmount) =>
-      lenderAmount.user === currLenderAmount?.user ? currLenderAmount : lenderAmount
+    const tempLendeeAmounts = payments.lendeeAmounts;
+    tempLendeeAmounts.map((lendeeAmount) =>
+      lendeeAmount.user === currLendeeAmount?.user ? currLendeeAmount : lendeeAmount
     );
     setPayments({
       ...payments,
-      lenderAmounts: tempLenderAmounts,
+      lendeeAmounts: tempLendeeAmounts,
     });
   };
 
@@ -39,7 +39,7 @@ export const Payment: FC<PaymentProps> = () => {
           <p className='text-lg'>
             {payments.name} | {format(payments.date, 'MM/dd/yyyy')}
           </p>
-          <p className='italic'>{payments.lendee.name}</p>
+          <p className='italic'>{payments.lender.name}</p>
         </div>
         <div className='flex flex-row h-full items-center space-x-6'>
           <div className='flex w-32 h-10 px-4 justify-center items-center border rounded-lg border-eggplant'>
@@ -50,7 +50,7 @@ export const Payment: FC<PaymentProps> = () => {
         </div>
       </div>
       {!isCollapsed
-        ? payments.lenderAmounts.map((user, index) => {
+        ? payments.lendeeAmounts.map((user, index) => {
             return (
               <div key={index}>
                 <div className='flex w-full h-16 px-3 justify-between '>
