@@ -8,6 +8,7 @@ import { Home } from './components/home/Home.tsx';
 import { Root } from './routes/root.tsx';
 import { App } from './routes/app.tsx';
 import { PaymentsModule } from './components/financials/paymentsModule/PaymentsModule.tsx';
+import { DebtsModule } from './components/financials/debts/DebtsModule.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
               {
                 path: 'payments',
                 element: <PaymentsModule />,
+              },
+              {
+                path: 'debts',
+                element: <DebtsModule />,
               },
             ],
           },
