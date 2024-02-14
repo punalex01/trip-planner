@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { FC, useState } from 'react';
-import { mockPayment1 } from '../../mocks/payments';
+import { mockPayment1 } from '../../../mocks/payments';
 import { currencyFormatter } from 'src/global/functions';
 import { format } from 'date-fns';
 import { IUser } from 'src/interfaces/User';

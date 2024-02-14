@@ -102,8 +102,20 @@ export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebar
               buttonRoundedStyling(false)
             }
           >
-            <User />
+            <User className='shrink-0' />
             <h2 className='grow line-clamp-1'>Individual</h2>
+          </div>
+          <div
+            onClick={() => {
+              setCurrentModule(ModuleType.FINANCIALS_GROUP_SETTLEMENTS);
+            }}
+            className={
+              'flex grow h-10 w-full pl-8 pr-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
+              getGroupViewButtonBackground(ModuleType.FINANCIALS_GROUP_SETTLEMENTS)
+            }
+          >
+            <Users className='shrink-0' />
+            <h2 className='grow line-clamp-1'>Debts</h2>
           </div>
           <div
             onClick={() => {
@@ -114,8 +126,8 @@ export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebar
               getGroupViewButtonBackground(ModuleType.FINANCIALS_GROUP_PAYMENTS)
             }
           >
-            <Users />
-            <h2 className='grow line-clamp-1'>Group</h2>
+            <Users className='shrink-0' />
+            <h2 className='grow line-clamp-1'>Payments</h2>
           </div>
         </div>
       ) : null}

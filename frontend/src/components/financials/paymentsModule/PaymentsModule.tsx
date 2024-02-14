@@ -1,9 +1,9 @@
+import { Payment } from './Payment';
 import { FC, useState } from 'react';
-import { PaymentsModule } from '../PaymentsModule';
-import { AddPaymentModal } from './AddPaymentModal';
-import { RepayModal } from './RepayModal';
+import { AddPaymentModal } from '../modals/AddPaymentModal';
+import { RepayModal } from '../modals/RepayModal';
 
-export const GroupFinancials: FC = () => {
+export const PaymentsModule: FC = () => {
   const [isAddPaymentModalOpen, setAddPaymentModalOpen] = useState(false);
   const [isRepayModalOpen, setRepayModalOpen] = useState(false);
 
@@ -32,7 +32,11 @@ export const GroupFinancials: FC = () => {
             <RepayModal isRepayModalOpen={isRepayModalOpen} setRepayModalOpen={setRepayModalOpen} />
           </div>
         </div>
-        <PaymentsModule />
+        <div className={`relative w-full h-full overflow-auto`}>
+          <div className='absolute top-0 bot-0 left-0 right-0 flex flex-row flex-wrap py-3 px-3'>
+            <Payment />
+          </div>
+        </div>
       </div>
     </>
   );
