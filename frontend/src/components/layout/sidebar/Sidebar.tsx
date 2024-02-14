@@ -7,8 +7,7 @@ import { cn } from 'shadcn/lib/utils';
 import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 
 import { mockTrips } from 'src/mocks/trips';
-import { mockJapanModules } from 'src/mocks/pages';
-import { CHECKLIST_MODULE, FINANCIAL_MODULE } from 'src/global/constants';
+import { ModuleType } from 'src/global/constants';
 import { AddModuleModal } from './modal/AddModuleModal';
 import { useAppContext } from 'src/context/AppContext';
 import { FinancialsSidebarButtons } from './FinancialsSidebarButtons';
@@ -43,47 +42,38 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
     return <div className='font-bold'>{currTrip.name[0].toUpperCase()}</div>;
   };
 
-  const displayModules = mockJapanModules.map((module, index) => {
-    const bg = currModule && currModule.id === module.id ? ' bg-eggplant/20' : ' hover:bg-eggplant/20';
-
-    let moduleIcon;
-    switch (module.pageType) {
-      case FINANCIAL_MODULE:
-        return <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} module={module} />;
-      case CHECKLIST_MODULE:
-        moduleIcon = <ListTodo className='shrink-0' />;
-        break;
-      default:
-        break;
-    }
-
+  // TODO: hardcode isntead of dynamically rendering buttons
+  const displayModules = () => {
     if (isCollapsed) {
       return (
-        <div key={index} className='border border-eggplant/20 rounded-xl'>
-          <div
-            onClick={() => setCurrentModule(module)}
-            className={'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' + bg}
-          >
-            {moduleIcon}
+        <div className='h-full w-full flex flex-col space-y-2'>
+          <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} />
+          <div className='border border-eggplant/20 rounded-xl'>
+            <div
+              onClick={() => setCurrentModule(ModuleType.CHECKLIST_MODULE)}
+              className={`h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer ${currModule === ModuleType.CHECKLIST_MODULE ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`}
+            >
+              <ListTodo className='shrink-0' />
+            </div>
           </div>
         </div>
       );
     }
 
     return (
-      <div
-        key={index}
-        onClick={() => setCurrentModule(module)}
-        className={
-          'flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1' +
-          bg
-        }
-      >
-        {moduleIcon}
-        <h2 className='line-clamp-1'>{module.name}</h2>
+      <div className='h-full w-full flex flex-col space-y-2'>
+        <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} />
+
+        <div
+          onClick={() => setCurrentModule(ModuleType.CHECKLIST_MODULE)}
+          className={`flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1 ${currModule === ModuleType.CHECKLIST_MODULE ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`}
+        >
+          <ListTodo className='shrink-0' />
+          <h2 className='line-clamp-1'>Checklists</h2>
+        </div>
       </div>
     );
-  });
+  };
 
   return (
     <>
@@ -125,9 +115,7 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         </Popover>
       </div>
       <div className='flex grow flex-col w-full'>
-        <ScrollArea className='w-full p-3'>
-          <div className='h-full w-full flex flex-col space-y-2'>{displayModules}</div>
-        </ScrollArea>
+        <ScrollArea className='w-full p-3'>{displayModules()}</ScrollArea>
         <div className='w-full h-16 mt-auto p-3'>
           <button
             onClick={() => setModuleModalOpen(true)}

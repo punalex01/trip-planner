@@ -12,7 +12,7 @@ const AppContext = createContext<IAppContext | undefined>(undefined);
 
 const AppStateProvider = ({ children }: ProviderProps) => {
   const [appState, setAppState] = useReducer(appStateReducer, {
-    currentTripModule: { trip: null, module: null, viewType: null },
+    currentTripModule: { trip: null, module: null },
   });
 
   const reducers = getAppStateDispatch(setAppState);
