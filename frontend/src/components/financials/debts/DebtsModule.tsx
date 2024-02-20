@@ -1,10 +1,30 @@
 import { FC, useState } from 'react';
 import { AddPaymentModal } from '../modals/AddPaymentModal';
 import { RepayModal } from '../modals/RepayModal';
+import { Debt } from './Debt';
+import { owesUser } from 'src/mocks/debts';
+import { IDebt } from 'src/interfaces/Debt';
 
 export const DebtsModule: FC = () => {
   const [isAddPaymentModalOpen, setAddPaymentModalOpen] = useState(false);
   const [isRepayModalOpen, setRepayModalOpen] = useState(false);
+
+  const renderDebts = (debts: IDebt[]) => {
+    if (debts.length === 0) {
+      return (
+        <div className='w-full h-full flex justify-center items-center'>
+          <p>None :D</p>
+        </div>
+      );
+    }
+    return (
+      <div className='w-full h-full flex flex-col space-y-2'>
+        {debts.map((debt, index) => (
+          <Debt key={index} user={debt.user} total={debt.total} />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -32,14 +52,18 @@ export const DebtsModule: FC = () => {
                 <h2 className='text-white'>You Owe</h2>
               </div>
 
-              <div className='w-full h-full border border-eggplant/20 rounded-b-md rounded-tr-md bg-eggplant/20'></div>
+              <div className='w-full h-full border border-eggplant/20 rounded-b-md rounded-tr-md bg-eggplant/20 p-3'>
+                {renderDebts([])}
+              </div>
             </div>
             <div className='w-1/2 h-full px-3 flex flex-col'>
               <div className='w-24 h-10 bg-eggplant/50 rounded-t-md flex justify-center items-center'>
                 <h2 className='text-white'>Owes You</h2>
               </div>
 
-              <div className='w-full h-full border border-eggplant/20 rounded-b-md rounded-tr-md bg-eggplant/20'></div>
+              <div className='w-full h-full border border-eggplant/20 rounded-b-md rounded-tr-md bg-eggplant/20 p-3'>
+                {renderDebts(owesUser)}
+              </div>
             </div>
           </div>
         </div>
