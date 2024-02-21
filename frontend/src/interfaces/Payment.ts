@@ -21,3 +21,10 @@ export interface IPaymentOwed {
   total: number;
   paymentUUID: string;
 }
+
+export interface IIndividualPayment {
+  name: string;
+  amount: number;
+  isIndividual: boolean;
+  date: Date;
+}

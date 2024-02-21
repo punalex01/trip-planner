@@ -9,6 +9,7 @@ import { Root } from './routes/root.tsx';
 import { App } from './routes/app.tsx';
 import { PaymentsModule } from './components/financials/paymentsModule/PaymentsModule.tsx';
 import { DebtsModule } from './components/financials/debts/DebtsModule.tsx';
+import { IndividualBalancesModule } from './components/financials/individual/IndividualModule.tsx';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
               {
                 path: 'debts',
                 element: <DebtsModule />,
+              },
+              {
+                path: 'individual',
+                element: <IndividualBalancesModule />,
               },
             ],
           },
