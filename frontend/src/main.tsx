@@ -1,62 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Test } from './routes/test.tsx';
-import { Layout } from './components/layout/Layout.tsx';
-import { Home } from './components/home/Home.tsx';
-import { Root } from './routes/root.tsx';
-import { App } from './routes/app.tsx';
-import { PaymentsModule } from './components/financials/paymentsModule/PaymentsModule.tsx';
-import { DebtsModule } from './components/financials/debts/DebtsModule.tsx';
-import { IndividualBalancesModule } from './components/financials/individual/IndividualModule.tsx';
-
-const router = createBrowserRouter([
-  {
-    path: '/wow',
-    element: <Test />,
-  },
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        path: '/',
-        element: <Layout />,
-        children: [
-          {
-            path: 'home',
-            element: <Home />,
-          },
-          {
-            path: 'root',
-            element: <Root />,
-          },
-          {
-            path: 'financials/',
-            children: [
-              {
-                path: 'payments',
-                element: <PaymentsModule />,
-              },
-              {
-                path: 'debts',
-                element: <DebtsModule />,
-              },
-              {
-                path: 'individual',
-                element: <IndividualBalancesModule />,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
+import { AuthProvider } from './context/auth/AuthContext.tsx';
+import Router from './router/Router.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   </React.StrictMode>
 );
