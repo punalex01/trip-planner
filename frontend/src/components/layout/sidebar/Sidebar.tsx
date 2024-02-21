@@ -7,10 +7,9 @@ import { cn } from 'shadcn/lib/utils';
 import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 
 import { mockTrips } from 'src/mocks/trips';
-import { ModuleType } from 'src/global/constants';
-import { AddModuleModal } from './modal/AddModuleModal';
 import { useAppContext } from 'src/context/AppContext';
 import { FinancialsSidebarButtons } from './FinancialsSidebarButtons';
+import { NavLink } from 'react-router-dom';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,10 +17,8 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
   const [open, setOpen] = useState(false);
-  const [isModuleModalOpen, setModuleModalOpen] = useState(false);
-  const [{ currentTripModule }, { setCurrentTrip, setCurrentModule }] = useAppContext();
+  const [{ currentTripModule }, { setCurrentTrip }] = useAppContext();
   const currTrip = currentTripModule.trip;
-  const currModule = currentTripModule.module;
 
   const displaySearchBar = () => {
     if (!isCollapsed) {
@@ -49,12 +46,14 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
         <div className='h-full w-full flex flex-col space-y-2'>
           <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} />
           <div className='border border-eggplant/20 rounded-xl'>
-            <div
-              onClick={() => setCurrentModule(ModuleType.CHECKLIST_MODULE)}
-              className={`h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer ${currModule === ModuleType.CHECKLIST_MODULE ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`}
+            <NavLink
+              to='/checklists'
+              className={({ isActive }) =>
+                `flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1 ${isActive ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`
+              }
             >
               <ListTodo className='shrink-0' />
-            </div>
+            </NavLink>
           </div>
         </div>
       );
@@ -63,14 +62,15 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
     return (
       <div className='h-full w-full flex flex-col space-y-2'>
         <FinancialsSidebarButtons isSidebarCollapsed={isCollapsed} />
-
-        <div
-          onClick={() => setCurrentModule(ModuleType.CHECKLIST_MODULE)}
-          className={`flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1 ${currModule === ModuleType.CHECKLIST_MODULE ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`}
+        <NavLink
+          to='/checklists'
+          className={({ isActive }) =>
+            `flex grow h-10 w-full px-2 space-x-2 rounded-lg border border-eggplant/20 items-center hover:cursor-pointer overflow-clip line-clamp-1 ${isActive ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`
+          }
         >
           <ListTodo className='shrink-0' />
           <h2 className='line-clamp-1'>Checklists</h2>
-        </div>
+        </NavLink>
       </div>
     );
   };
@@ -116,15 +116,6 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
       </div>
       <div className='flex grow flex-col w-full'>
         <ScrollArea className='w-full p-3'>{displayModules()}</ScrollArea>
-        <div className='w-full h-16 mt-auto p-3'>
-          <button
-            onClick={() => setModuleModalOpen(true)}
-            className='flex h-10 w-full bg-eggplant/50 justify-center items-center rounded-lg hover:cursor-pointer hover:bg-eggplant'
-          >
-            <div className='text-white'>{isCollapsed ? '+' : '+ New Module'}</div>
-          </button>
-        </div>
-        <AddModuleModal isModuleModalOpen={isModuleModalOpen} setModuleModalOpen={setModuleModalOpen} />
       </div>
     </>
   );

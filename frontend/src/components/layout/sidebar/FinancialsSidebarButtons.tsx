@@ -1,8 +1,6 @@
 import { ChevronDown, ChevronUp, CircleDollarSign, User, Users } from 'lucide-react';
 import { useState, FC } from 'react';
-import { useAppContext } from 'src/context/AppContext';
-import { ModuleType } from 'src/global/constants';
-import { isFinancialModuleType } from 'src/global/functions';
+import { NavLink, useLocation, matchPath } from 'react-router-dom';
 
 interface FinancialsButtonsProps {
   isSidebarCollapsed: boolean;
@@ -10,66 +8,46 @@ interface FinancialsButtonsProps {
 
 export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebarCollapsed }) => {
   const [isCollapsed, setCollapsed] = useState(true);
-  const [{ currentTripModule }, { setCurrentModule }] = useAppContext();
-  const currSelectedModule = currentTripModule.module;
+  const currPath = useLocation().pathname;
 
-  const moduleBackground =
-    currSelectedModule !== null && isFinancialModuleType(currSelectedModule)
-      ? ' bg-eggplant/20'
-      : ' hover:bg-eggplant/20';
+  const getGroupViewButtonBackground = (isActive: boolean) =>
+    isSidebarCollapsed
+      ? `h-10 w-full flex justify-center items-center hover:cursor-pointer ${isActive ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`
+      : `flex grow h-10 w-full pl-8 pr-2 space-x-2 items-center hover:cursor-pointer overflow-clip line-clamp-1 ${isActive ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`;
 
-  const getGroupViewButtonBackground = (viewType: ModuleType) =>
-    viewType === currSelectedModule ? ' bg-eggplant/20' : ' hover:bg-eggplant/20';
-
-  // Edit border styling to make corners line up
-  const buttonRoundedStyling = (isMainModuleButton: boolean) => {
-    if (isMainModuleButton) {
-      return !isCollapsed && currSelectedModule === ModuleType.FINANCIALS_INDIVIDUAL_BALANCES
-        ? ' rounded-t-lg'
-        : ' rounded-lg';
-    } else {
-      return currSelectedModule === ModuleType.FINANCIALS_INDIVIDUAL_BALANCES ? ' rounded-b-lg' : ' rounded-lg';
-    }
-  };
+  // // Edit border styling to make corners line up
+  // const buttonRoundedStyling = (isMainModuleButton: boolean) => {
+  //   if (isMainModuleButton) {
+  //     return !isCollapsed && currSelectedModule === ModuleType.FINANCIALS_INDIVIDUAL_BALANCES
+  //       ? ' rounded-t-lg'
+  //       : ' rounded-lg';
+  //   } else {
+  //     return currSelectedModule === ModuleType.FINANCIALS_INDIVIDUAL_BALANCES ? ' rounded-b-lg' : ' rounded-lg';
+  //   }
+  // };
 
   if (isSidebarCollapsed) {
     return (
-      <div className='border border-eggplant/20 rounded-xl'>
+      <div className='border border-eggplant/20'>
         <div
           onClick={() => setCollapsed(!isCollapsed)}
-          className={
-            'h-10 w-full flex justify-center items-center hover:cursor-pointer' +
-            moduleBackground +
-            buttonRoundedStyling(true)
-          }
+          className={`h-10 w-full flex justify-center items-center hover:cursor-pointer ${
+            matchPath('/financials/*', currPath) ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'
+          }`}
         >
           <CircleDollarSign className='shrink-0' />
         </div>
         {!isCollapsed ? (
           <div>
-            <div
-              onClick={() => {
-                setCurrentModule(ModuleType.FINANCIALS_INDIVIDUAL_BALANCES);
-              }}
-              className={
-                'h-10 w-full flex justify-center items-center hover:cursor-pointer' +
-                getGroupViewButtonBackground(ModuleType.FINANCIALS_INDIVIDUAL_BALANCES) +
-                buttonRoundedStyling(false)
-              }
-            >
+            <NavLink to='/financials/individual' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
               <User className='shrink-0' />
-            </div>
-            <div
-              onClick={() => {
-                setCurrentModule(ModuleType.FINANCIALS_GROUP_PAYMENTS);
-              }}
-              className={
-                'h-10 w-full rounded-lg flex justify-center items-center hover:cursor-pointer' +
-                getGroupViewButtonBackground(ModuleType.FINANCIALS_GROUP_PAYMENTS)
-              }
-            >
+            </NavLink>
+            <NavLink to='/financials/debts' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
               <Users className='shrink-0' />
-            </div>
+            </NavLink>
+            <NavLink to='/financials/payments' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
+              <Users className='shrink-0' />
+            </NavLink>
           </div>
         ) : null}
       </div>
@@ -77,14 +55,11 @@ export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebar
   }
 
   return (
-    <div className='border border-eggplant/20 rounded-xl'>
+    <div className='border border-eggplant/20'>
       <div
         onClick={() => setCollapsed(!isCollapsed)}
-        className={
-          'flex grow h-10 w-full px-2 space-x-2 items-center hover:cursor-pointer overflow-clip line-clamp-1' +
-          moduleBackground +
-          buttonRoundedStyling(true)
-        }
+        className={`flex grow h-10 w-full px-2 space-x-2 items-center hover:cursor-pointer overflow-clip line-clamp-1
+          ${matchPath('/financials/*', currPath) ? ' bg-eggplant/20' : ' hover:bg-eggplant/20'}`}
       >
         <CircleDollarSign />
         <h2 className='grow line-clamp-1'>Financials</h2>
@@ -92,43 +67,18 @@ export const FinancialsSidebarButtons: FC<FinancialsButtonsProps> = ({ isSidebar
       </div>
       {!isCollapsed ? (
         <div>
-          <div
-            onClick={() => {
-              setCurrentModule(ModuleType.FINANCIALS_INDIVIDUAL_BALANCES);
-            }}
-            className={
-              'flex grow h-10 w-full pl-8 pr-2 space-x-2 items-center hover:cursor-pointer overflow-clip line-clamp-1' +
-              getGroupViewButtonBackground(ModuleType.FINANCIALS_INDIVIDUAL_BALANCES) +
-              buttonRoundedStyling(false)
-            }
-          >
+          <NavLink to='/financials/individual' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
             <User className='shrink-0' />
             <h2 className='grow line-clamp-1'>Individual</h2>
-          </div>
-          <div
-            onClick={() => {
-              setCurrentModule(ModuleType.FINANCIALS_GROUP_SETTLEMENTS);
-            }}
-            className={
-              'flex grow h-10 w-full pl-8 pr-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
-              getGroupViewButtonBackground(ModuleType.FINANCIALS_GROUP_SETTLEMENTS)
-            }
-          >
+          </NavLink>
+          <NavLink to='/financials/debts' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
             <Users className='shrink-0' />
             <h2 className='grow line-clamp-1'>Debts</h2>
-          </div>
-          <div
-            onClick={() => {
-              setCurrentModule(ModuleType.FINANCIALS_GROUP_PAYMENTS);
-            }}
-            className={
-              'flex grow h-10 w-full pl-8 pr-2 space-x-2 rounded-lg items-center hover:cursor-pointer overflow-clip line-clamp-1' +
-              getGroupViewButtonBackground(ModuleType.FINANCIALS_GROUP_PAYMENTS)
-            }
-          >
+          </NavLink>
+          <NavLink to='/financials/payments' className={({ isActive }) => getGroupViewButtonBackground(isActive)}>
             <Users className='shrink-0' />
             <h2 className='grow line-clamp-1'>Payments</h2>
-          </div>
+          </NavLink>
         </div>
       ) : null}
     </div>
