@@ -1,0 +1,22 @@
+version: "3"
+services:
+  backend:
+      container_name: backend
+      build:
+        context: ./backend
+        dockerfile: Dockerfile
+      volumes:
+        - "./backend:/var/www/html/"
+      ports:
+        - 127.0.0.1:5000:5000
+  db:
+      image: postgres
+      container_name: db
+      ports:
+      - 5432:5432
+      # volumes:
+      #   - ~/apps/postgres:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_PASSWORD=testpass
+        - POSTGRES_USER=testuser
+        - POSTGRES_DB=testdb

@@ -70,9 +70,10 @@ class Login(Resource):
             _password = body.get("password")
 
             user = UserAuth.get_by_email(_email)
-            is_password_valid = user.check_password(_password)
-            print(is_password_valid)
+            if not user:
+                return {"success": False, "msg": "Email or password is invalid"}, 400
 
+            is_password_valid = user.check_password(_password)
             if not user or not is_password_valid:
                 return {"success": False, "msg": "Email or password is invalid"}, 400
 
