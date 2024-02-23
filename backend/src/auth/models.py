@@ -1,6 +1,5 @@
 from sqlalchemy import inspect
 from datetime import datetime
-from flask_validator import ValidateEmail, ValidateString, ValidateCountry
 from sqlalchemy.orm import validates
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -21,13 +20,6 @@ class UserAuth(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.Text(), nullable=False)
     jwt_auth_active = db.Column(db.Boolean())
-
-    # Validations => https://flask-validator.readthedocs.io/en/latest/index.html
-    @classmethod
-    def __declare_last__(cls):
-        ValidateEmail(
-            UserAuth.email, True, True, "The email is not valid. Please check it"
-        )  # True => Allow internationalized addresses, True => Check domain name resolution.
 
     @classmethod
     def get_by_email(cls, email):
