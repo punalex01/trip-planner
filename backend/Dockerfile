@@ -24,6 +24,7 @@ COPY --from=builder-image /opt/venv /opt/venv
 COPY run.py .
 COPY src ./src
 COPY .env ./.env
+COPY gunicorn-config.py ./gunicorn-cfg.py
 
 EXPOSE 5000
 

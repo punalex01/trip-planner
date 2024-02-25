@@ -1,14 +1,14 @@
 version: "3"
 services:
-  backend:
-      container_name: backend
+  api:
+      container_name: api
       build:
         context: ./backend
         dockerfile: Dockerfile
       volumes:
         - "./backend:/var/www/html/"
-      ports:
-        - 127.0.0.1:5000:5000
+      expose:
+        - 5000
   db:
       image: postgres
       container_name: db
@@ -20,3 +20,13 @@ services:
         - POSTGRES_PASSWORD=testpass
         - POSTGRES_USER=testuser
         - POSTGRES_DB=testdb
+
+  nginx:
+    container_name: nginx
+    build: ./backend/nginx
+    # volumes:
+    #   - static_volume:/home/app/web/project/static
+    ports:
+      - 1337:80
+    depends_on:
+      - api
