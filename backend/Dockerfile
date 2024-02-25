@@ -32,4 +32,5 @@ ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV FLASK_APP=run.py
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+# CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
