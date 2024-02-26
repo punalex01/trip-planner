@@ -21,10 +21,10 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt install -y python3.12 python3.12-venv
 
 COPY --from=builder-image /opt/venv /opt/venv
-COPY run.py .
-COPY src ./src
-COPY .env ./.env
-COPY gunicorn-config.py ./gunicorn-cfg.py
+# COPY run.py .
+# COPY src ./src
+# COPY .env ./.env
+# COPY gunicorn-config.py ./gunicorn-cfg.py
 
 EXPOSE 5000
 
@@ -34,4 +34,5 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV FLASK_APP=run.py
 
 # CMD ["flask", "run", "--host", "0.0.0.0"]
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+WORKDIR "/api"
+CMD ["gunicorn", "--config", "gunicorn-config.py", "run:app", "--reload"]
