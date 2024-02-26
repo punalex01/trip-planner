@@ -1,13 +1,13 @@
 from flask import request
 from flask_restx import Resource, fields
 import jwt
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 import os
 
-from .. import api
-from .models import UserAuth, db
+from .models import UserAuth
+from . import auth_api
 
-signup_model = api.model(
+signup_model = auth_api.model(
     "SignUpModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=64),
@@ -16,9 +16,9 @@ signup_model = api.model(
 )
 
 
-@api.route("/register", methods=["POST"])
+@auth_api.route("/register", methods=["POST"])
 class Register(Resource):
-    @api.expect(signup_model, validate=True)
+    @auth_api.expect(signup_model, validate=True)
     def post(self):
         if request.method == "POST":
             body = request.get_json()
@@ -51,7 +51,7 @@ class Register(Resource):
             return "Method is Not Allowed"
 
 
-login_model = api.model(
+login_model = auth_api.model(
     "LoginModel",
     {
         "email": fields.String(required=True, min_length=4, max_length=64),
@@ -60,9 +60,9 @@ login_model = api.model(
 )
 
 
-@api.route("/login", methods=["POST"])
+@auth_api.route("/login", methods=["POST"])
 class Login(Resource):
-    @api.expect(login_model, validate=True)
+    @auth_api.expect(login_model, validate=True)
     def post(self):
         if request.method == "POST":
             body = request.get_json()
@@ -92,7 +92,7 @@ class Login(Resource):
             return "Method is Not Allowed"
 
 
-@api.route("/logout")
+@auth_api.route("/logout")
 class LogoutUser(Resource):
     """
     Logs out User using 'logout_model' input
