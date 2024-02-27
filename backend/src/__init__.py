@@ -5,10 +5,10 @@ from flask_migrate import Migrate
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 
+from .model import db
 from .config import config
-from .auth import auth_api
+from src.controller.auth import auth_api
 
-db = SQLAlchemy()
 migrate = Migrate()
 
 app = Flask(__name__, instance_relative_config=True)

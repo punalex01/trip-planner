@@ -5,16 +5,11 @@ import jwt
 from datetime import datetime, timedelta, timezone
 import os
 
-from .models import UserAuth, db, JWTTokenBlocklist
-from . import auth_api
+from src.model.user import Users
 
-signup_model = auth_api.model(
-    "SignUpModel",
-    {
-        "email": fields.String(required=True, min_length=4, max_length=64),
-        "password": fields.String(required=True, min_length=4, max_length=16),
-    },
-)
+from ..model import db
+from ..model.auth import UserAuth, JWTTokenBlocklist
+from . import auth_api
 
 """
    Helper function for JWT token required
@@ -66,16 +61,27 @@ def token_required(f):
     return decorator
 
 
+signup_model = auth_api.model(
+    "SignUpModel",
+    {
+        "name": fields.String(required=True, min_length=1, max_length=64),
+        "email": fields.String(required=True, min_length=4, max_length=64),
+        "password": fields.String(required=True, min_length=4, max_length=16),
+    },
+)
+
+
 @auth_api.route("/register", methods=["POST"])
 class Register(Resource):
     @auth_api.expect(signup_model, validate=True)
     def post(self):
         if request.method == "POST":
             body = request.get_json()
+            _name = body.get("name")
             _email = body.get("email")
             _password = body.get("password")
 
-            user = UserAuth.get_by_email(_email)
+            user = Users.get_by_email(_email)
 
             if user:
                 return {
@@ -83,16 +89,17 @@ class Register(Resource):
                     "msg": "An account with this email has already been created.",
                 }, 400
 
-            new_user = UserAuth(email=_email)
-            new_user.set_password(_password)
+            new_user = Users(name=_name, email=_email)
+            new_user.auth_user = UserAuth(email=_email, users=new_user)
+            new_user.auth_user.set_password(_password)
 
-            # create access token uwing JWT
+            # create access token using JWT
             token = jwt.encode(
                 {"email": _email, "exp": datetime.utcnow() + timedelta(minutes=30)},
                 os.getenv("JWT_SECRET_KEY"),
             )
 
-            new_user.set_jwt_auth_active(True)
+            new_user.auth_user.set_jwt_auth_active(True)
             new_user.save()
 
             return {"success": True, "token": token}, 200

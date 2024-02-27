@@ -1,14 +1,18 @@
-from sqlalchemy import inspect
+from sqlalchemy import inspect, ForeignKey
 from datetime import datetime
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .. import db
+from src.model.user import Users
+
+from . import db
 
 
 class UserAuth(db.Model):
+    __tablename__ = "user_auth"
+
     # Auto Generated Fields:
-    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), ForeignKey(Users.id), primary_key=True)
     # The Date of the Instance Creation => Created one Time when Instantiation
     created = db.Column(db.DateTime(timezone=True), default=datetime.now)
     # The Date of the Instance Update => Changed with Every Update
