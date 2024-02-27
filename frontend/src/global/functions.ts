@@ -8,7 +8,7 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', {
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-function updateOptions(options: any) {
+function updateOptions(options?: any) {
   const update = { ...options };
   if (localStorage.token) {
     update.headers = {
@@ -19,6 +19,6 @@ function updateOptions(options: any) {
   return update;
 }
 
-export default function fetcher(url: string | URL | Request, options: any) {
-  return fetch(url, updateOptions(options));
+export default function fetcher(route: string | URL | Request, options?: any) {
+  return fetch(`${import.meta.env.VITE_REACT_APP_API_URL}${route}`, updateOptions(options));
 }

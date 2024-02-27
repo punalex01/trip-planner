@@ -7,7 +7,7 @@ import { LoginForm } from './forms/LoginForm';
 import { Link } from 'react-router-dom';
 
 export const Login: FC = () => {
-  const { loginForm, onSubmit, onError } = LoginForm();
+  const { loginForm, onSubmit } = LoginForm();
   return (
     <>
       <div className='w-full h-full bg-eggplant'>
@@ -19,11 +19,11 @@ export const Login: FC = () => {
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-                loginForm.handleSubmit(onSubmit, onError)();
+                loginForm.handleSubmit(onSubmit)();
               }}
               className='grow w-full flex flex-col justify-end'
             >
-              <CardContent className='grow'>
+              <CardContent className='grow pb-0'>
                 <div className='flex h-full w-full flex-row'>
                   <div className='w-full'>
                     <FormField
@@ -50,6 +50,9 @@ export const Login: FC = () => {
                         </FormItem>
                       )}
                     />
+                    <div className='h-8 text-red-500'>
+                      {loginForm.formState.errors.root && loginForm.formState.errors.root.message}
+                    </div>
                   </div>
                 </div>
               </CardContent>
