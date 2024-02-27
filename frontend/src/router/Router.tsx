@@ -9,7 +9,7 @@ import { IndividualBalancesModule } from '../components/financials/individual/In
 import { useAuthContext } from 'src/context/auth/AuthContext.tsx';
 import { ProtectedRoute } from './ProtectedRoute.tsx';
 import { LoginRoute } from './routes/login.tsx';
-import { SignupRoute } from './routes/signup.tsx';
+import { RegisterRoute } from './routes/register.tsx';
 
 const Router = () => {
   const { token } = useAuthContext();
@@ -80,8 +80,8 @@ const Router = () => {
       element: <LoginRoute />,
     },
     {
-      path: '/signup',
-      element: <SignupRoute />,
+      path: '/register',
+      element: <RegisterRoute />,
     },
   ];
 

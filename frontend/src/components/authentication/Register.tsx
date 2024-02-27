@@ -3,30 +3,30 @@ import { Button } from 'shadcn/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from 'shadcn/components/ui/card';
 import { Form, FormField, FormItem, FormLabel } from 'shadcn/components/ui/form';
 import { Input } from 'shadcn/components/ui/input';
-import { SignupForm } from './forms/SignupForm';
+import { RegisterForm } from './forms/RegisterForm';
 
-export const Signup: FC = () => {
-  const { signupForm, onSubmit, onError } = SignupForm();
+export const Register: FC = () => {
+  const { registerForm, onSubmit } = RegisterForm();
   return (
     <>
       <div className='w-full h-full bg-eggplant'>
         <Card className='w-[400px] max-h-[400px] fixed inset-0 items-center mx-auto my-auto flex flex-col'>
           <CardHeader className='h-16 w-full'>
-            <CardTitle>Log In</CardTitle>
+            <CardTitle>Sign Up</CardTitle>
           </CardHeader>
-          <Form {...signupForm}>
+          <Form {...registerForm}>
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-                signupForm.handleSubmit(onSubmit, onError)();
+                registerForm.handleSubmit(onSubmit)();
               }}
               className='grow w-full flex flex-col justify-end'
             >
-              <CardContent className='grow'>
+              <CardContent className='grow pb-0'>
                 <div className='flex h-full w-full flex-row'>
                   <div className='w-full space-y-3'>
                     <FormField
-                      control={signupForm.control}
+                      control={registerForm.control}
                       name='name'
                       render={({ field }) => (
                         <FormItem>
@@ -38,7 +38,7 @@ export const Signup: FC = () => {
                       )}
                     />
                     <FormField
-                      control={signupForm.control}
+                      control={registerForm.control}
                       name='email'
                       render={({ field }) => (
                         <FormItem>
@@ -50,7 +50,7 @@ export const Signup: FC = () => {
                       )}
                     />
                     <FormField
-                      control={signupForm.control}
+                      control={registerForm.control}
                       name='password'
                       render={({ field }) => (
                         <FormItem>
@@ -61,6 +61,10 @@ export const Signup: FC = () => {
                         </FormItem>
                       )}
                     />
+                    <div className='h-8 text-red-500'>
+                      {/* {`Test msg 🤪🤪🤪`} */}
+                      {registerForm.formState.errors.root && `${registerForm.formState.errors.root.message} 🤪🤪🤪`}
+                    </div>
                   </div>
                 </div>
               </CardContent>
