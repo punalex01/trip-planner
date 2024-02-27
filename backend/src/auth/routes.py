@@ -1,10 +1,11 @@
+from functools import wraps
 from flask import request
 from flask_restx import Resource, fields
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
-from .models import UserAuth
+from .models import UserAuth, db, JWTTokenBlocklist
 from . import auth_api
 
 signup_model = auth_api.model(
@@ -14,6 +15,55 @@ signup_model = auth_api.model(
         "password": fields.String(required=True, min_length=4, max_length=16),
     },
 )
+
+"""
+   Helper function for JWT token required
+"""
+
+
+def token_required(f):
+
+    @wraps(f)
+    def decorator(*args, **kwargs):
+
+        token = None
+
+        if "authorization" in request.headers:
+            bearer, token = request.headers["authorization"].split(" ")
+            if bearer != "Bearer":
+                return {"success": False, "msg": "Authorization header is invalid"}, 400
+
+        if not token:
+            return {"success": False, "msg": "Valid JWT token is missing"}, 400
+
+        try:
+            data = jwt.decode(token, os.getenv("JWT_SECRET_KEY"), algorithms=["HS256"])
+            current_user = UserAuth.get_by_email(data["email"])
+
+            if not current_user:
+                return {
+                    "success": False,
+                    "msg": "This user does not exist.",
+                }, 400
+
+            token_expired = (
+                db.session.query(JWTTokenBlocklist.id)
+                .filter_by(jwt_token=token)
+                .scalar()
+            )
+
+            if token_expired is not None:
+                return {"success": False, "msg": "Token revoked."}, 400
+
+            if not current_user.check_jwt_auth_active():
+                return {"success": False, "msg": "Token expired."}, 400
+
+        except:
+            return {"success": False, "msg": "Token is invalid"}, 400
+
+        return f(current_user, *args, **kwargs)
+
+    return decorator
 
 
 @auth_api.route("/register", methods=["POST"])
@@ -98,34 +148,17 @@ class LogoutUser(Resource):
     Logs out User using 'logout_model' input
     """
 
-    # @token_required
-    # def post(self, current_user):
-    def post(self):
+    @token_required
+    def post(self, current_user):
 
-        token = request.headers["authorization"].split(" ")[1]
+        _jwt_token = request.headers["authorization"].split(" ")[1]
 
-        # jwt_block = JWTTokenBlocklist(jwt_token=_jwt_token, created_at=datetime.now(timezone.utc))
-        # jwt_block.save()
-        try:
-            data = jwt.decode(token, os.getenv("JWT_SECRET_KEY"), algorithms=["HS256"])
-            current_user = UserAuth.get_by_email(data["email"])
+        jwt_block = JWTTokenBlocklist(
+            jwt_token=_jwt_token, created_at=datetime.now(timezone.utc)
+        )
+        jwt_block.save()
 
-            if not current_user:
-                return {
-                    "success": False,
-                    "msg": "Sorry. Wrong auth token. This user does not exist.",
-                }, 400
-
-            # token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
-
-            # if token_expired is not None:
-            #     return {"success": False, "msg": "Token revoked."}, 400
-
-            if not current_user.check_jwt_auth_active():
-                return {"success": False, "msg": "Token expired."}, 400
-            current_user.set_jwt_auth_active(False)
-            current_user.save()
-        except:
-            return {"success": False, "msg": "Token is invalid"}, 400
+        self.set_jwt_auth_active(False)
+        self.save()
 
         return {"success": True}, 200
