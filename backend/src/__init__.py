@@ -8,6 +8,7 @@ from flask_cors import CORS
 from .model import db
 from .config import config
 from src.controller.auth import auth_api
+from src.controller.trips import trips_api
 
 migrate = Migrate()
 
@@ -22,5 +23,6 @@ api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(api_bp, version="1.0", title="Users API")
 
 api.add_namespace(auth_api, path="/auth")
+api.add_namespace(trips_api, path="/trips")
 
 app.register_blueprint(api_bp)

@@ -6,7 +6,7 @@ import uuid
 from . import db
 
 
-class Users(db.Model):
+class User(db.Model):
     __tablename__ = "users"
 
     # Auto Generated Fields:
@@ -25,6 +25,7 @@ class Users(db.Model):
 
     # mapped tables
     auth_user = relationship("UserAuth", backref="users", uselist=False)
+    trips = relationship("Trip", backref="users", uselist=True)
 
     @classmethod
     def get_by_id(cls, id):
@@ -37,6 +38,9 @@ class Users(db.Model):
     @classmethod
     def get_by_uuid(cls, uuid):
         return cls.query.filter_by(email=uuid).first()
+
+    def get_trips(self):
+        return self.trips
 
     def save(self):
         db.session.add(self)

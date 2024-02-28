@@ -5,7 +5,7 @@ import jwt
 from datetime import datetime, timedelta, timezone
 import os
 
-from src.model.user import Users
+from src.model.user import User
 
 from ..model import db
 from ..model.auth import UserAuth, JWTTokenBlocklist
@@ -19,7 +19,7 @@ from . import auth_api
 def token_required(f):
 
     @wraps(f)
-    def decorator(*args, **kwargs):
+    def decorator(self, *args, **kwargs):
 
         token = None
 
@@ -56,7 +56,7 @@ def token_required(f):
         except:
             return {"success": False, "msg": "Token is invalid"}, 400
 
-        return f(current_user, *args, **kwargs)
+        return f(self, current_user, *args, **kwargs)
 
     return decorator
 
@@ -81,7 +81,7 @@ class Register(Resource):
             _email = body.get("email")
             _password = body.get("password")
 
-            user = Users.get_by_email(_email)
+            user = User.get_by_email(_email)
 
             if user:
                 return {
@@ -89,7 +89,7 @@ class Register(Resource):
                     "msg": "An account with this email has already been created.",
                 }, 400
 
-            new_user = Users(name=_name, email=_email)
+            new_user = User(name=_name, email=_email)
             new_user.auth_user = UserAuth(email=_email, users=new_user)
             new_user.auth_user.set_password(_password)
 

@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from src.model.user import Users
+from src.model.user import User
 
 from . import db
 
@@ -12,7 +12,7 @@ class UserAuth(db.Model):
     __tablename__ = "user_auth"
 
     # Auto Generated Fields:
-    user_id = db.Column(db.Integer(), ForeignKey(Users.id), primary_key=True)
+    user_id = db.Column(db.Integer(), ForeignKey(User.id), primary_key=True)
     # The Date of the Instance Creation => Created one Time when Instantiation
     created = db.Column(db.DateTime(timezone=True), default=datetime.now)
     # The Date of the Instance Update => Changed with Every Update
