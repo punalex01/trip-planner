@@ -37,13 +37,17 @@ class User(db.Model):
 
     @classmethod
     def get_by_uuid(cls, uuid):
-        return cls.query.filter_by(email=uuid).first()
+        return cls.query.filter_by(uuid=uuid).first()
 
     def get_trips(self):
         return self.trips
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
 
     def toDict(self):

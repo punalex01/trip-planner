@@ -30,8 +30,20 @@ class Trip(db.Model):
     description = db.Column(db.String(), nullable=False)
 
     @classmethod
-    def get_by_uuid(cls, uuid):
-        return cls.query.filter_by(uuid=uuid).first()
+    def get_by_uuid(cls, user_id, uuid):
+        return cls.query.filter_by(user_id=user_id).filter_by(uuid=uuid).first()
+
+    def update(self, new_values):
+        for key, value in new_values.items():
+            setattr(self, key, value)
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
     def toDICT(self):
         cls_dict = {}
