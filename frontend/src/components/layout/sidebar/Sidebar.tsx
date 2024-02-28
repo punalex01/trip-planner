@@ -6,16 +6,17 @@ import { Check, ChevronsUpDown, ListTodo } from 'lucide-react';
 import { cn } from 'shadcn/lib/utils';
 import { ScrollArea } from 'shadcn/components/ui/scroll-area';
 
-import { mockTrips } from 'src/mocks/trips';
 import { useAppContext } from 'src/context/AppContext';
 import { FinancialsSidebarButtons } from './FinancialsSidebarButtons';
 import { NavLink } from 'react-router-dom';
+import { TripSummary } from 'src/interfaces/TripSummary';
 
 interface SidebarProps {
   isCollapsed: boolean;
+  trips: TripSummary[];
 }
 
-export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
+export const Sidebar: FC<SidebarProps> = ({ isCollapsed, trips }) => {
   const [open, setOpen] = useState(false);
   const [{ currentTripModule }, { setCurrentTrip }] = useAppContext();
   const currTrip = currentTripModule.trip;
@@ -89,13 +90,12 @@ export const Sidebar: FC<SidebarProps> = ({ isCollapsed }) => {
               <CommandInput placeholder='Search trip...' />
               <CommandEmpty>No trip found.</CommandEmpty>
               <CommandGroup>
-                {mockTrips.map((trip) => (
+                {trips.map((trip) => (
                   <CommandItem
-                    key={trip.id}
+                    key={trip.uuid}
                     value={trip.name}
                     onSelect={() => {
-                      // TODO: GET Request to retrieve selected trip
-                      const currTrip = mockTrips.find((mockTrip) => mockTrip.id === trip.id);
+                      const currTrip = trips.find((mockTrip) => mockTrip.uuid === trip.uuid);
                       if (currTrip !== undefined) setCurrentTrip(currTrip);
                       setOpen(false);
                     }}

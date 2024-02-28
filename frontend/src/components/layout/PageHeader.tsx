@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from 'shadcn/components/ui/dropdown-menu';
-import { post_logout } from 'src/api/auth/auth';
+import { post_logout } from 'src/api/auth/requests';
 import { useAuthContext } from 'src/context/auth/AuthContext';
 
 export const PageHeader: FC = () => {

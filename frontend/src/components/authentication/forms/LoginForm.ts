@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuthContext } from 'src/context/auth/AuthContext';
-import { post_login } from 'src/api/auth/auth';
+import { post_login } from 'src/api/auth/requests';
 
 export const LoginForm = () => {
   const auth = useAuthContext();

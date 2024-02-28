@@ -1,10 +1,14 @@
 import { FC, useState } from 'react';
 import { TripButton } from './TripButton';
 import { AddTripModal } from './modal/AddTripModal';
+import { useTrips } from '../layout/Layout';
+import { useAppContext } from 'src/context/AppContext';
 
 export const Home: FC = () => {
   const [isTripModalOpen, setTripModalOpen] = useState(false);
-  const test = Array.from('W');
+  const [, { setCurrentTrip }] = useAppContext();
+  const [trips, setTrips] = useTrips();
+
   return (
     <>
       <div className='flex flex-col h-full w-full'>
@@ -19,14 +23,20 @@ export const Home: FC = () => {
               hoverColor='hover:bg-eggplant'
               onClick={setTripModalOpen}
             />
-            <AddTripModal isTripModalOpen={isTripModalOpen} setTripModalOpen={setTripModalOpen} />
-            {test.map((_, key) => (
+            <AddTripModal isTripModalOpen={isTripModalOpen} setTripModalOpen={setTripModalOpen} setTrips={setTrips} />
+            {trips.map((value, key) => (
               <TripButton
                 key={key}
-                name={'Japan'}
-                startDate={new Date()}
+                name={value.name}
+                startDate={value.startDate}
                 color='bg-violet'
                 hoverColor='hover:bg-violet/50'
+                onClick={() => {
+                  const currTrip = trips.find((trip) => trip.uuid === value.uuid);
+                  if (currTrip) {
+                    setCurrentTrip(currTrip);
+                  }
+                }}
               />
             ))}
           </div>

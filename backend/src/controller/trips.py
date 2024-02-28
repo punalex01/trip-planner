@@ -44,7 +44,7 @@ class TripsAPI(Resource):
             current_user.trips.append(new_trip)
             current_user.save()
 
-            trips = [trip.toJSON() for trip in current_user.get_trips()]
+            trips = [trip.toJSON() for trip in current_user.get_trips()[::-1]]
             return {"success": True, "trips": trips}, 200
 
         except:

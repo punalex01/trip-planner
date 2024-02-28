@@ -13,14 +13,16 @@ import { Calendar } from 'shadcn/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/components/ui/popoverDialog';
 import { Form, FormField, FormItem, FormLabel } from 'shadcn/components/ui/form';
 import { AddTripForm } from '../forms/AddTripForm';
+import { TripSummary } from 'src/interfaces/TripSummary';
 
 interface AddTripModalProps {
   isTripModalOpen: boolean;
   setTripModalOpen: Dispatch<SetStateAction<boolean>>;
+  setTrips: (trips: TripSummary[]) => void;
 }
 
-export const AddTripModal: FC<AddTripModalProps> = ({ isTripModalOpen, setTripModalOpen }) => {
-  const { modalForm, setDate, onSubmit, onError } = AddTripForm();
+export const AddTripModal: FC<AddTripModalProps> = ({ isTripModalOpen, setTripModalOpen, setTrips }) => {
+  const { modalForm, setDate, onSubmit, onError } = AddTripForm(setTrips, setTripModalOpen);
   const { dates } = modalForm.watch();
 
   return (
@@ -90,7 +92,7 @@ export const AddTripModal: FC<AddTripModalProps> = ({ isTripModalOpen, setTripMo
                                   <Calendar
                                     initialFocus
                                     mode='range'
-                                    defaultMonth={dates?.from}
+                                    defaultMonth={new Date()}
                                     selected={field.value as DateRange}
                                     onSelect={setDate}
                                     numberOfMonths={2}
@@ -117,7 +119,13 @@ export const AddTripModal: FC<AddTripModalProps> = ({ isTripModalOpen, setTripMo
                   </div>
                 </CardContent>
                 <CardFooter className='flex justify-between'>
-                  <Button variant='outline' onClick={() => setTripModalOpen(false)}>
+                  <Button
+                    variant='outline'
+                    onClick={() => {
+                      modalForm.reset();
+                      setTripModalOpen(false);
+                    }}
+                  >
                     Cancel
                   </Button>
                   <Button type='submit'>Create</Button>
