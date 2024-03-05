@@ -2,6 +2,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import ForeignKey
 from datetime import datetime
 import uuid
+from sqlalchemy.orm import relationship
 
 from src.model.user import User
 
@@ -13,9 +14,8 @@ class Trip(db.Model):
 
     # Auto Generated Fields:
     user_id = db.Column(db.Integer(), ForeignKey(User.id))
-    uuid = db.Column(
-        UUID(as_uuid=True), unique=True, default=uuid.uuid4, primary_key=True
-    )
+    trip_id = db.Column(db.Integer(), primary_key=True)
+    uuid = db.Column(UUID(as_uuid=True), unique=True, default=uuid.uuid4)
     # The Date of the Instance Creation => Created one Time when Instantiation
     created = db.Column(db.DateTime(timezone=True), default=datetime.now)
     # The Date of the Instance Update => Changed with Every Update
@@ -28,6 +28,8 @@ class Trip(db.Model):
     start_date = db.Column(db.Date(), nullable=False)
     end_date = db.Column(db.Date(), nullable=False)
     description = db.Column(db.String(), nullable=False)
+
+    group_payments = relationship("GroupPayments", backref="trips", uselist=True)
 
     @classmethod
     def get_by_uuid(cls, user_id, uuid):

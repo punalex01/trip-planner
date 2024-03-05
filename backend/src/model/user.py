@@ -54,7 +54,7 @@ class User(db.Model):
         cls_dict = {}
         cls_dict["name"] = self.name
         cls_dict["email"] = self.email
-        cls_dict["uuid"] = self.uuid
+        cls_dict["uuid"] = str(self.uuid)
         return cls_dict
 
     def toJSON(self):

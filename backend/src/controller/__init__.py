@@ -1,4 +1,5 @@
 from flask_restx import Namespace
 
-auth_api = Namespace("auth", "User authentication API")
-trips_api = Namespace("trips", "Trips API")
+from .auth import auth_api
+from .trips import trips_api
+from .financials.group_payments import financials_api

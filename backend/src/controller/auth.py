@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import request
-from flask_restx import Resource, fields
+from flask_restx import Namespace, Resource, fields
 import jwt
 from datetime import datetime, timedelta, timezone
 import os
@@ -9,7 +9,8 @@ from src.model.user import User
 
 from ..model import db
 from ..model.auth import UserAuth, JWTTokenBlocklist
-from . import auth_api
+
+auth_api = Namespace("auth", "User authentication API", path="/auth")
 
 """
    Helper function for JWT token required

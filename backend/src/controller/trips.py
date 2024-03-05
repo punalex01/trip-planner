@@ -1,10 +1,11 @@
 from flask import request
-from flask_restx import Resource, fields
+from flask_restx import Namespace, Resource, fields
 
 from src.controller.auth import token_required
-from . import trips_api
 from ..model.trip import Trip
 from ..model.user import User
+
+trips_api = Namespace("trips", "Trips API", path="/trips")
 
 create_trip_model = trips_api.model(
     "CreateTripModel",
@@ -55,7 +56,7 @@ class Trips(Resource):
         try:
             current_user = User.get_by_id(current_user_auth.user_id)
 
-            trips = [trip.toJSON() for trip in current_user.get_trips()]
+            trips = [trip.toJSON() for trip in current_user.get_trips()[::-1]]
             return {"success": True, "trips": trips}, 200
 
         except:
@@ -74,7 +75,7 @@ update_trip_model = trips_api.model(
 
 
 @trips_api.route("/<string:trip_uuid>")
-class Trips(Resource):
+class IndividualTrips(Resource):
     """
     Update trip
     """
