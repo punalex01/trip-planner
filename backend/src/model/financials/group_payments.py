@@ -14,7 +14,7 @@ class GroupPayments(db.Model):
     __tablename__ = "group_payments"
 
     # Auto Generated Fields:
-    trip_id = db.Column(db.Integer(), ForeignKey(Trip.trip_id))
+    trip_id = db.Column(db.Integer(), ForeignKey(Trip.id))
     payment_id = db.Column(db.Integer(), primary_key=True)
     uuid = db.Column(UUID(as_uuid=True), unique=True, default=uuid.uuid4)
     # The Date of the Instance Creation => Created one Time when Instantiation

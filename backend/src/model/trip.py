@@ -4,17 +4,16 @@ from datetime import datetime
 import uuid
 from sqlalchemy.orm import relationship
 
-from src.model.user import User
+from .trip_users import TripUsers
 
 from . import db
 
 
 class Trip(db.Model):
-    __tablename__ = "trips"
+    __tablename__ = "trip"
 
     # Auto Generated Fields:
-    user_id = db.Column(db.Integer(), ForeignKey(User.id))
-    trip_id = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
     uuid = db.Column(UUID(as_uuid=True), unique=True, default=uuid.uuid4)
     # The Date of the Instance Creation => Created one Time when Instantiation
     created = db.Column(db.DateTime(timezone=True), default=datetime.now)
@@ -29,11 +28,16 @@ class Trip(db.Model):
     end_date = db.Column(db.Date(), nullable=False)
     description = db.Column(db.String(), nullable=False)
 
-    group_payments = relationship("GroupPayments", backref="trips", uselist=True)
+    users = relationship(
+        "User", secondary=TripUsers, back_populates="trips", uselist=True
+    )
+    group_payments = relationship("GroupPayments", backref="trip", uselist=True)
 
     @classmethod
     def get_by_uuid(cls, user_id, uuid):
-        return cls.query.filter_by(user_id=user_id).filter_by(uuid=uuid).first()
+        trip = cls.query.filter_by(uuid=uuid).first()
+        user_ids = set([user.id for user in trip.users])
+        return trip if user_id in user_ids else None
 
     def update(self, new_values):
         for key, value in new_values.items():
@@ -54,6 +58,7 @@ class Trip(db.Model):
         cls_dict["start_date"] = str(self.start_date)
         cls_dict["end_date"] = str(self.end_date)
         cls_dict["description"] = self.description
+        cls_dict["users"] = [user.toJSON() for user in self.users]
         cls_dict["uuid"] = str(self.uuid)
 
         return cls_dict

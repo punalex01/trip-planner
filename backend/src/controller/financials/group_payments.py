@@ -189,7 +189,7 @@ class GroupPaymentLendee(Resource):
             if not trip:
                 return {"success": False, "msg": "Trip not found"}, 400
 
-            payment = GroupPayments.get_by_uuid(trip.trip_id, payment_uuid)
+            payment = GroupPayments.get_by_uuid(trip.id, payment_uuid)
             if not payment:
                 return {"success": False, "msg": "Payment not found"}, 400
 

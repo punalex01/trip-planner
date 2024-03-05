@@ -91,7 +91,7 @@ class Register(Resource):
                 }, 400
 
             new_user = User(name=_name, email=_email)
-            new_user.auth_user = UserAuth(email=_email, users=new_user)
+            new_user.auth_user = UserAuth(email=_email, user=new_user)
             new_user.auth_user.set_password(_password)
 
             # create access token using JWT

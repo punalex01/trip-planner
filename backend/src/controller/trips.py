@@ -117,3 +117,59 @@ class IndividualTrips(Resource):
 
         except:
             return {"success": False, "msg": "Unable to delete trip."}, 400
+
+
+add_users_model = trips_api.model(
+    "AddUsersModel",
+    {
+        "users": fields.List(fields.String(), required=True),  # emails of users
+    },
+)
+
+
+@trips_api.route("/<string:trip_uuid>/users")
+class TripUsers(Resource):
+    """
+    Retrieve trip's users
+    """
+
+    @token_required
+    def get(self, current_user_auth, trip_uuid):
+        try:
+            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
+            if not curr_trip:
+                return {"success": False, "msg": "Trip not found."}, 400
+
+            users = [user.toJSON() for user in curr_trip.users]
+            return {"success": True, "users": users}, 200
+
+        except:
+            return {"success": False, "msg": "Unable to retrieve trip users."}, 400
+
+    """
+    Add trip's users
+    """
+
+    @trips_api.expect(add_users_model, validate=True)
+    @token_required
+    def put(self, current_user_auth, trip_uuid):
+        try:
+            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
+            if not curr_trip:
+                return {"success": False, "msg": "Trip not found."}, 400
+            body = request.get_json()
+
+            users = []
+            for email in body.get("users"):
+                curr_user = User.get_by_email(email)
+                if not curr_user:
+                    return {"success": False, "msg": "User not found."}, 400
+                users.append(curr_user)
+            curr_trip.users = users
+            curr_trip.save()
+
+            users = [user.toJSON() for user in curr_trip.users]
+            return {"success": True, "users": users}, 200
+
+        except:
+            return {"success": False, "msg": "Unable to update trip users."}, 400

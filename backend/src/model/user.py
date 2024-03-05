@@ -5,9 +5,11 @@ import uuid
 
 from . import db
 
+from .trip_users import TripUsers
+
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     # Auto Generated Fields:
     id = db.Column(db.Integer(), primary_key=True)
@@ -24,8 +26,10 @@ class User(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
 
     # mapped tables
-    auth_user = relationship("UserAuth", backref="users", uselist=False)
-    trips = relationship("Trip", backref="users", uselist=True)
+    auth_user = relationship("UserAuth", backref="user", uselist=False)
+    trips = relationship(
+        "Trip", secondary=TripUsers, back_populates="users", uselist=True
+    )
 
     @classmethod
     def get_by_id(cls, id):
