@@ -6,9 +6,9 @@ from ...model.user import User
 from ...model.trip import Trip
 from ...model.financials.group_payments import GroupPayments, GroupPaymentLendees
 
-financials_api = Namespace("financials", "User trip financials API", path="/trips")
+group_payments_api = Namespace("financials", "User trip financials API", path="/trips")
 
-add_lendee_model = financials_api.model(
+add_lendee_model = group_payments_api.model(
     "LendeeModel",
     {
         "lendee": fields.String(required=True),  # email of user (TODO: switch to UUID)
@@ -17,7 +17,7 @@ add_lendee_model = financials_api.model(
     },
 )
 
-add_payment_model = financials_api.model(
+add_payment_model = group_payments_api.model(
     "AddPaymentModel",
     {
         "name": fields.String(required=True, min_length=1, max_length=64),
@@ -29,72 +29,73 @@ add_payment_model = financials_api.model(
 )
 
 
-@financials_api.route("/<string:trip_uuid>/financials/payment")
+@group_payments_api.route("/<string:trip_uuid>/financials/payment")
 class GroupPayment(Resource):
 
-    @financials_api.expect(add_payment_model, validate=True)
+    @group_payments_api.expect(add_payment_model, validate=True)
     @token_required
     def post(self, current_user_auth, trip_uuid):
-        try:
-            body = request.get_json()
-            trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not trip:
-                return {"success": False, "msg": "Trip not found"}, 400
+        body = request.get_json()
+        trip = Trip.get_by_uuid(trip_uuid)
+        if not trip or not trip.contains_user(current_user_auth.user_id):
+            return {"success": False, "msg": "Trip not found"}, 400
 
-            lender = User.get_by_email(body.get("lender"))
-            if not lender:
-                return {"success": False, "msg": "Lender not found"}, 400
+        lender = User.get_by_email(body.get("lender"))
+        if not lender:
+            return {"success": False, "msg": "Lender not found"}, 400
 
-            new_payment = GroupPayments(
-                name=body.get("name"),
-                date=body.get("date"),
-                lender=lender,
-                total=body.get("total"),
-                is_returned=False,
+        new_payment = GroupPayments(
+            name=body.get("name"),
+            date=body.get("date"),
+            lender=lender,
+            total=body.get("total"),
+            is_returned=False,
+        )
+
+        lendee_payments = body.get("lendees")
+        for payment in lendee_payments:
+            lendee = User.get_by_email(payment.get("lendee"))
+            if not lendee or not trip.contains_user(lendee.id):
+                return {"success": False, "msg": "Lendee not found"}, 400
+
+            new_gpl = GroupPaymentLendees(
+                lendee=lendee,
+                is_returned=payment.get("isReturned"),
+                amount=payment.get("amount"),
             )
 
-            lendee_payments = body.get("lendees")
-            for payment in lendee_payments:
-                lendee = User.get_by_email(payment.get("lendee"))
-                if not lendee:
-                    return {"success": False, "msg": "Lendee not found"}, 400
+            new_payment.lendees.append(new_gpl)
 
-                new_payment.lendees.append(
-                    GroupPaymentLendees(
-                        lendee=lendee,
-                        is_returned=payment.get("isReturned"),
-                        amount=payment.get("amount"),
-                    )
-                )
-            trip.group_payments.append(new_payment)
-            trip.save()
-            payments = [payment.toJSON() for payment in trip.group_payments]
+        trip.group_payments.append(new_payment)
+        trip.save()
+        payments = [payment.toJSON() for payment in trip.group_payments]
 
-            return {"success": True, "payments": payments}, 200
-        except:
-            return {"success": False, "msg": "Unable to create payment."}, 400
+        return {"success": True, "payments": payments}, 200
 
     @token_required
     def get(self, current_user_auth, trip_uuid):
         try:
-            trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not trip:
+            trip = Trip.get_by_uuid(trip_uuid)
+            if not trip or not trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found"}, 400
             payments = [payment.toJSON() for payment in trip.group_payments]
             return {"success": True, "payments": payments}, 200
+
         except:
             return {"success": False, "msg": "Unable to retrieve payments."}, 400
 
 
-@financials_api.route("/<string:trip_uuid>/financials/payment/<string:payment_uuid>")
+@group_payments_api.route(
+    "/<string:trip_uuid>/financials/payment/<string:payment_uuid>"
+)
 class GroupPayment(Resource):
-    @financials_api.expect(add_payment_model, validate=True)
+    @group_payments_api.expect(add_payment_model, validate=True)
     @token_required
     def put(self, current_user_auth, trip_uuid, payment_uuid):
         try:
             body = request.get_json()
             trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not trip:
+            if not trip or not trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found"}, 400
 
             payment = GroupPayments.get_by_uuid(trip.trip_id, payment_uuid)
@@ -154,11 +155,11 @@ class GroupPayment(Resource):
     @token_required
     def delete(self, current_user_auth, trip_uuid, payment_uuid):
         try:
-            trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not trip:
+            trip = Trip.get_by_uuid(trip_uuid)
+            if not trip or not trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found"}, 400
 
-            curr_payment = GroupPayments.get_by_uuid(trip.trip_id, payment_uuid)
+            curr_payment = GroupPayments.get_by_uuid(trip.id, payment_uuid)
             if not curr_payment:
                 return {"success": False, "msg": "Payment not found"}, 400
 
@@ -170,23 +171,23 @@ class GroupPayment(Resource):
             return {"success": False, "msg": "Unable to delete payment."}, 400
 
 
-update_is_returned_model = financials_api.model(
+update_is_returned_model = group_payments_api.model(
     "UpdateIsReturnedModel",
     {"isReturned": fields.Boolean(required=True)},
 )
 
 
-@financials_api.route(
+@group_payments_api.route(
     "/<string:trip_uuid>/financials/payment/<string:payment_uuid>/lendee/<string:lendee_uuid>"
 )
 class GroupPaymentLendee(Resource):
-    @financials_api.expect(update_is_returned_model, validate=True)
+    @group_payments_api.expect(update_is_returned_model, validate=True)
     @token_required
     def patch(self, current_user_auth, trip_uuid, payment_uuid, lendee_uuid):
         try:
             body = request.get_json()
             trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not trip:
+            if not trip or not trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found"}, 400
 
             payment = GroupPayments.get_by_uuid(trip.id, payment_uuid)

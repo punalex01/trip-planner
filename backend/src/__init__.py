@@ -7,7 +7,12 @@ from flask_cors import CORS
 
 from .model import db
 from .config import config
-from src.controller import auth_api, trips_api, financials_api
+from src.controller import (
+    auth_api,
+    trips_api,
+    group_payments_api,
+    outstanding_payments_api,
+)
 
 migrate = Migrate()
 
@@ -23,6 +28,8 @@ api = Api(api_bp, version="1.0", title="Users API")
 
 api.add_namespace(auth_api)
 api.add_namespace(trips_api)
-api.add_namespace(financials_api)
+api.add_namespace(group_payments_api)
+api.add_namespace(outstanding_payments_api)
+
 
 app.register_blueprint(api_bp)

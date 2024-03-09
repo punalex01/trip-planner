@@ -85,8 +85,8 @@ class IndividualTrips(Resource):
     def put(self, current_user_auth, trip_uuid):
         try:
             body = request.get_json()
-            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not curr_trip:
+            curr_trip = Trip.get_by_uuid(trip_uuid)
+            if not curr_trip or not curr_trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found."}, 400
 
             curr_trip.update(body)
@@ -105,10 +105,9 @@ class IndividualTrips(Resource):
     @token_required
     def delete(self, current_user_auth, trip_uuid):
         try:
-            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not curr_trip:
+            curr_trip = Trip.get_by_uuid(trip_uuid)
+            if not curr_trip or not curr_trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found."}, 400
-
             curr_trip.delete()
 
             current_user = User.get_by_id(current_user_auth.user_id)
@@ -136,8 +135,8 @@ class TripUsers(Resource):
     @token_required
     def get(self, current_user_auth, trip_uuid):
         try:
-            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not curr_trip:
+            curr_trip = Trip.get_by_uuid(trip_uuid)
+            if not curr_trip or not curr_trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found."}, 400
 
             users = [user.toJSON() for user in curr_trip.users]
@@ -154,8 +153,8 @@ class TripUsers(Resource):
     @token_required
     def put(self, current_user_auth, trip_uuid):
         try:
-            curr_trip = Trip.get_by_uuid(current_user_auth.user_id, trip_uuid)
-            if not curr_trip:
+            curr_trip = Trip.get_by_uuid(trip_uuid)
+            if not curr_trip or not curr_trip.contains_user(current_user_auth.user_id):
                 return {"success": False, "msg": "Trip not found."}, 400
             body = request.get_json()
 

@@ -34,10 +34,11 @@ class Trip(db.Model):
     group_payments = relationship("GroupPayments", backref="trip", uselist=True)
 
     @classmethod
-    def get_by_uuid(cls, user_id, uuid):
-        trip = cls.query.filter_by(uuid=uuid).first()
-        user_ids = set([user.id for user in trip.users])
-        return trip if user_id in user_ids else None
+    def get_by_uuid(cls, uuid):
+        return cls.query.filter_by(uuid=uuid).first()
+
+    def contains_user(self, user_id):
+        return user_id in set([user.id for user in self.users])
 
     def update(self, new_values):
         for key, value in new_values.items():
