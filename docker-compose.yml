@@ -20,6 +20,7 @@ services:
         - ./backend/.env:/api/.env
         - ./backend/src/:/api/src/
         - ./backend/migrations/:/api/migrations/
+        - ./backend/init-db.sh/:/api/init-db.sh/
       expose:
         - 5000
       restart: always
