@@ -40,7 +40,6 @@ coverage.xml
 # Flask files:
 instance/
 .webassets-cache
-migrations
 
 # pyenv
 .python-version

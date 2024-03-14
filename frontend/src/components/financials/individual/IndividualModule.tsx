@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { columns } from './columns';
+import { columns } from './Columns';
 import { mockIndividualPayments } from 'src/mocks/individualPayments';
 import { DataTable } from './DataTable';
 

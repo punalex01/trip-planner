@@ -11,4 +11,10 @@ export default defineConfig({
       public: path.resolve(__dirname, './public'),
     },
   },
+  server: {
+    port: 8080,
+    strictPort: true,
+    host: true,
+    origin: 'http://0.0.0.0:8080',
+  },
 });

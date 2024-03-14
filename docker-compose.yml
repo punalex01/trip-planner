@@ -1,5 +1,14 @@
 version: "3"
 services:
+  web:
+    container_name: web
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+        - ./frontend:/app
+    ports:
+      - 8080:8080
   api:
       container_name: api
       build:
